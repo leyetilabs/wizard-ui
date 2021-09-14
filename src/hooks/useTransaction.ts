@@ -17,12 +17,14 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
   const { client } = useTerra();
 
   const [fee, setFee] = useState<StdFee | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [result, setResult] = useState<any>(null);
+  const [txHash, setTxHash] = useState<string | null>(null);
 
   const [error, setError] = useState<string | null>(null);
 
   const getFee = useCallback(async () => {
-    if (msgs == null || msgs.length < 1) {
+    if (msgs == null || msgs.length < 1 || isLoading) {
       return;
     }
 
@@ -46,6 +48,7 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
     setFee(null);
     setResult(null);
     setError(null);
+    setIsLoading(false);
   };
 
   const submit = useCallback(async () => {
@@ -53,22 +56,43 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
       return;
     }
 
+    setIsLoading(true);
     setError(null);
 
     try {
-      const response = await post({
+      const res = await post({
         msgs,
         fee,
       });
 
-      setResult(response);
-      onSuccess?.(response);
+      setTxHash(res.result.txhash);
+      setResult(res);
     } catch (e) {
       setFee(null);
       setError("Error");
       onError?.(e);
     }
   }, [post, msgs, fee]);
+
+  const getTxInfos = useCallback(async () => {
+    if (txHash == null) {
+      return;
+    }
+
+    try {
+      const res = await client.tx.txInfo(txHash);
+      setIsLoading(false);
+      onSuccess?.(res);
+    } catch (error) {
+      setTimeout(() => {
+        getTxInfos();
+      }, 1000);
+    }
+  }, [txHash, client]);
+
+  useEffect(() => {
+    getTxInfos();
+  }, [txHash]);
 
   useEffect(() => {
     getFee();
@@ -80,8 +104,10 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
     fee,
     submit,
     result,
+    txHash,
     error,
     isReady,
+    isLoading,
     reset,
   };
 };
