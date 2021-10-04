@@ -1,54 +1,97 @@
-import { useCallback, useEffect, useState } from "react";
-import { useWallet } from "@terra-money/wallet-provider";
-import { Coins, Coin, StdFee, MsgExecuteContract } from "@terra-money/terra.js";
+import { useCallback, useEffect, useState, useMemo } from "react";
+import {
+  Coins,
+  Coin,
+  MsgExecuteContract,
+  CreateTxOptions,
+} from "@terra-money/terra.js";
+import { useWallet, UserDenied, Timeout } from "@terra-money/wallet-provider";
 
-import { useTerra } from "../TerraContext";
+import { useTerraWebapp } from "../context";
 import { useAddress } from "./useAddress";
+import { useMutation, useQuery } from "react-query";
 
 type Params = {
   msgs: MsgExecuteContract[];
-  onSuccess?: (d: any) => void;
-  onError?: (d: any) => void;
+  onSuccess?: () => void;
+  onError?: () => void;
 };
 
 export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
   const { post } = useWallet();
   const address = useAddress();
-  const { client } = useTerra();
+  const { client } = useTerraWebapp();
 
-  const [fee, setFee] = useState<StdFee | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isBroadcasting, setIsBroadcasting] = useState<boolean>(false);
   const [result, setResult] = useState<any>(null);
   const [txHash, setTxHash] = useState<string | null>(null);
+  const [error, setError] = useState<any>(null);
 
-  const [error, setError] = useState<string | null>(null);
-
-  const getFee = useCallback(async () => {
-    if (msgs == null || msgs.length < 1 || isLoading) {
-      return;
-    }
-
-    setFee(null);
-    setError(null);
-
-    try {
-      const data = await client.tx.estimateFee(address, msgs, {
+  const { data: fee, isLoading: isEstimating } = useQuery(
+    ["fee", msgs],
+    () => {
+      return client.tx.estimateFee(address, msgs, {
         gasPrices: new Coins([new Coin("uusd", 0.15)]),
         feeDenoms: ["uusd"],
       });
-
-      setFee(data);
-    } catch (e) {
-      setFee(null);
-      setError("Error");
+    },
+    {
+      enabled: address != null && msgs != null,
     }
-  }, [address, client, msgs]);
+  );
+
+  const { data: txInfo } = useQuery(
+    ["txInfo", txHash],
+    () => {
+      if (txHash == null) {
+        return Promise.reject();
+      }
+
+      return client.tx.txInfo(txHash);
+    },
+    {
+      enabled: txHash != null,
+    }
+  );
+
+  const { mutate, isLoading: isPosting } = useMutation(
+    (data: CreateTxOptions) => {
+      return post(data);
+    },
+    {
+      onMutate: () => {
+        setIsBroadcasting(true);
+      },
+      onError: (error: any) => {
+        setIsBroadcasting(false);
+
+        if (error instanceof Timeout) {
+          setError("Timeout");
+        } else if (error instanceof UserDenied) {
+          reset();
+          setError("User Denied");
+          onError?.();
+        } else {
+          setError(error);
+          onError?.();
+        }
+      },
+      onSuccess: (data) => {
+        // Boom baby!
+        setTxHash(data.result.txhash);
+        setResult(data);
+        onSuccess?.();
+      },
+      onSettled: () => {
+        reset();
+      },
+    }
+  );
 
   const reset = () => {
-    setFee(null);
     setResult(null);
     setError(null);
-    setIsLoading(false);
+    setIsBroadcasting(false);
   };
 
   const submit = useCallback(async () => {
@@ -56,49 +99,29 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
       return;
     }
 
-    setIsLoading(true);
     setError(null);
 
-    try {
-      const res = await post({
-        msgs,
-        fee,
-      });
+    mutate({
+      msgs,
+      fee,
+    });
+  }, [msgs, fee, mutate]);
 
-      setTxHash(res.result.txhash);
-      setResult(res);
-    } catch (e) {
-      setFee(null);
-      setError("Error");
-      onError?.(e);
-    }
-  }, [post, msgs, fee]);
-
-  const getTxInfos = useCallback(async () => {
-    if (txHash == null) {
-      return;
+  const isReady = useMemo(() => {
+    if (fee == null || msgs == null || isEstimating) {
+      return false;
     }
 
-    try {
-      const res = await client.tx.txInfo(txHash);
-      setIsLoading(false);
-      onSuccess?.(res);
-    } catch (error) {
-      setTimeout(() => {
-        getTxInfos();
-      }, 1000);
-    }
-  }, [txHash, client]);
+    return msgs.length > 0;
+  }, [fee, msgs, isEstimating]);
 
   useEffect(() => {
-    getTxInfos();
-  }, [txHash]);
+    console.log("txInfo", txInfo);
+  }, [txInfo]);
 
   useEffect(() => {
-    getFee();
-  }, [getFee]);
-
-  const isReady = fee != null && msgs != null && msgs.length > 0;
+    console.log("txInfo", fee);
+  }, [fee]);
 
   return {
     fee,
@@ -106,8 +129,10 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
     result,
     txHash,
     error,
+    isEstimating,
     isReady,
-    isLoading,
+    isPosting,
+    isBroadcasting,
     reset,
   };
 };

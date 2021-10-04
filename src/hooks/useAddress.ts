@@ -1,6 +1,10 @@
 import { useConnectedWallet } from "@terra-money/wallet-provider";
 
-export const useAddress = () => {
+/**
+ * Wallet address of connected wallet
+ * @returns string;
+ */
+export const useAddress = (): string => {
   const connectedWallet = useConnectedWallet();
   return connectedWallet?.terraAddress ?? "";
 };

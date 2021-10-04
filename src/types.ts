@@ -1,53 +1,3 @@
-import { Msg } from "@terra-money/terra.js";
-
-export type ContractVariables = {
-  contract: string;
-  msg: object;
-};
-
-export interface TxResult {
-  height: number;
-  raw_log: string[];
-  txhash: string;
-}
-
-export interface TxError {
-  code: number;
-  message?: string;
-}
-
-export interface Tx {
-  id: number;
-  msgs: Msg[];
-  origin: string;
-  result: TxResult;
-  success: boolean;
-  error: TxError;
-}
-
-export interface Response<T> {
-  error: boolean;
-  message: string | null;
-  data: T | null;
-}
-
-export enum NetworkType {
-  Mainnet = "mainnet",
-  Testnet = "testnet",
-}
-export interface Network {
-  name: NetworkType;
-  chainID: string;
-  lcd: string;
-  mantle: string;
-  factory: string;
-  routeContract: string;
-}
-
-export type Networks = Record<NetworkType, Network>;
-
-// New
-
 export type HumanAddr = string;
 export type CanonicalAddr = string;
 export type CW20Addr = string;
@@ -106,14 +56,6 @@ export type Routes = {
 };
 
 export interface LocalNetworkConfig {
-  /** Contract Addresses JSON URL */
-  contract: string;
-  routeContract: string;
-  /** Graphql server URL */
-  mantle: string;
-  stats: string;
-  factory: string;
-  /** Fixed fee */
   fee: { gasPrice: number; amount: number };
 }
 
@@ -123,10 +65,6 @@ export type Data = {
     pairs: any;
   };
   testnet: {
-    tokens: any;
-    pairs: any;
-  };
-  bombay: {
     tokens: any;
     pairs: any;
   };

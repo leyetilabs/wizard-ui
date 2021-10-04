@@ -1,19 +1,42 @@
-import { useMemo } from "react";
+import { useQuery } from "react-query";
 
-import { useTerra } from "../TerraContext";
+import useAddress from "../hooks/useAddress";
+import { useTerraWebapp } from "../context";
+import { isNativeToken } from "../asset";
 
-export const useBalance = (token: string) => {
-  const { balances } = useTerra();
+/**
+ *
+ * @param token - contract address or native denom
+ * @param contractAddress - override connected wallet address
+ * @returns string;
+ */
+export const useBalance = (token: string, contractAddress?: string) => {
+  const { client } = useTerraWebapp();
+  const terraAddress = useAddress();
+  const address = contractAddress ?? terraAddress;
 
-  return useMemo(() => {
-    if (!token) {
-      return "0";
+  // TODO: Fix type to have Coins and Balance
+  const { data, isLoading } = useQuery<any>(["balance", token, address], () => {
+    if (isNativeToken(token)) {
+      return client.bank.balance(address);
     }
 
-    const tokenBalance = balances?.get(token)?.amount.toString();
+    return client.wasm.contractQuery(token, {
+      balance: {
+        address,
+      },
+    });
+  });
 
-    return tokenBalance || "0";
-  }, [balances, token]);
+  if (isLoading || data == null) {
+    return "0";
+  }
+
+  if (data.balance) {
+    return data.balance;
+  }
+
+  return data.get(token)?.amount.toString();
 };
 
 export default useBalance;
