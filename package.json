@@ -1,6 +1,6 @@
 {
   "name": "@arthuryeti/terra",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "author": "itey.arthur@gmail.com",
   "license": "MIT",
   "repository": "https://github.com/arthuryeti/terra.git",
@@ -34,7 +34,6 @@
     "babel-core": "^6.26.3",
     "babel-runtime": "^6.26.0",
     "bignumber.js": "^9.0.1",
-    "graphql-request": "^3.5.0",
     "lodash": "^4.17.21",
     "numeral": "^2.0.6",
     "react": "^17.0.2",
@@ -44,9 +43,7 @@
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-typescript2": "^0.30.0",
     "tslib": "^2.3.1",
-    "typescript": "^4.4.3"
-  },
-  "dependencies": {
+    "typescript": "^4.4.3",
     "@arthuryeti/terraswap": "^0.1.5"
   }
 }

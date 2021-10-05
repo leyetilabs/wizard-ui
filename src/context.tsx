@@ -7,8 +7,9 @@ import {
   useContext,
   Consumer,
 } from "react";
-import { LCDClient } from "@terra-money/terra.js";
+import { Coin, Dec, LCDClient } from "@terra-money/terra.js";
 import { useWallet, NetworkInfo } from "@terra-money/wallet-provider";
+import { useQuery } from "react-query";
 
 const DEFAULT_NETWORK = {
   name: "mainnet",
@@ -19,6 +20,8 @@ const DEFAULT_NETWORK = {
 type TerraWebapp = {
   network: NetworkInfo;
   client: LCDClient;
+  taxCap: Coin | undefined;
+  taxRate: Dec | undefined;
 };
 
 export const TerraWebappContext: Context<TerraWebapp> =
@@ -28,6 +31,8 @@ export const TerraWebappContext: Context<TerraWebapp> =
       URL: DEFAULT_NETWORK.lcd,
       chainID: DEFAULT_NETWORK.chainID,
     }),
+    taxCap: undefined,
+    taxRate: undefined,
   });
 
 type Props = {
@@ -37,6 +42,14 @@ type Props = {
 export const TerraWebappProvider: FC<Props> = ({ children }) => {
   const { network } = useWallet();
 
+  const { data: taxCap } = useQuery("taxCap", () => {
+    return client.treasury.taxCap("uusd");
+  });
+
+  const { data: taxRate } = useQuery("taxRate", () => {
+    return client.treasury.taxRate();
+  });
+
   const client = useMemo(() => {
     return new LCDClient({
       URL: network.lcd,
@@ -44,13 +57,17 @@ export const TerraWebappProvider: FC<Props> = ({ children }) => {
     });
   }, [network]);
 
+  const value = useMemo(() => {
+    return {
+      network,
+      client,
+      taxCap,
+      taxRate,
+    };
+  }, [network, client, taxCap, taxRate]);
+
   return (
-    <TerraWebappContext.Provider
-      value={{
-        network,
-        client,
-      }}
-    >
+    <TerraWebappContext.Provider value={value}>
       {children}
     </TerraWebappContext.Provider>
   );
