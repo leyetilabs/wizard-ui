@@ -10,13 +10,25 @@ import {
 import { LCDClient } from "@terra-money/terra.js";
 import { useWallet, NetworkInfo } from "@terra-money/wallet-provider";
 
+const DEFAULT_NETWORK = {
+  name: "mainnet",
+  chainID: "colombus-5",
+  lcd: "https://lcd.terra.dev",
+};
+
 type TerraWebapp = {
   network: NetworkInfo;
   client: LCDClient;
 };
 
-export const TerraWebappContext: Context<TerraWebapp | undefined> =
-  createContext<TerraWebapp | undefined>(undefined);
+export const TerraWebappContext: Context<TerraWebapp> =
+  createContext<TerraWebapp>({
+    network: DEFAULT_NETWORK,
+    client: new LCDClient({
+      URL: DEFAULT_NETWORK.lcd,
+      chainID: DEFAULT_NETWORK.chainID,
+    }),
+  });
 
 type Props = {
   children: ReactNode;
