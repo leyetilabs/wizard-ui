@@ -31,7 +31,8 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
     ["fee", msgs],
     () => {
       return client.tx.estimateFee(address, msgs, {
-        gasPrices: new Coins([new Coin("uusd", 0.15)]),
+        gasPrices: new Coins([new Coin("uusd", 0.38)]),
+        gasAdjustment: 1.2,
         feeDenoms: ["uusd"],
       });
     },

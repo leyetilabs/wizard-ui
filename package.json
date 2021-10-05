@@ -45,5 +45,8 @@
     "rollup-plugin-typescript2": "^0.30.0",
     "tslib": "^2.3.1",
     "typescript": "^4.4.3"
+  },
+  "dependencies": {
+    "@arthuryeti/terraswap": "^0.1.5"
   }
 }

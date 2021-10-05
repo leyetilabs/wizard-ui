@@ -1,8 +1,8 @@
 import { useQuery } from "react-query";
+import { isNativeToken } from "@arthuryeti/terraswap";
 
 import useAddress from "../hooks/useAddress";
 import { useTerraWebapp } from "../context";
-import { isNativeToken } from "../asset";
 
 /**
  *

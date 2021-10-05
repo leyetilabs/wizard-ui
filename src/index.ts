@@ -1,4 +1,3 @@
-export * from "./asset";
 export * from "./message";
 export * from "./number";
 

@@ -1,71 +1,41 @@
-export type HumanAddr = string;
-export type CanonicalAddr = string;
-export type CW20Addr = string;
-
-export type StableDenom = string;
-export type bAssetDenom = string;
-export type AssetDenom = string;
-export type Denom = StableDenom | bAssetDenom | AssetDenom;
-
-export type WASMContractResult<T extends {} = {}> = {
-  Result: string;
-} & T;
-
-export type CW20AssetInfo = {
-  native_token: never;
-  token: { contract_addr: CW20Addr };
-};
-export type NativeAssetInfo = {
-  token: never;
-  native_token: { denom: StableDenom };
+// ---------------------------------------------
+// HandleMsg
+// ---------------------------------------------
+export type IncreaseAllowance = {
+  increase_allowance: {
+    spender: string;
+    amount: string;
+  };
 };
 
-export type AssetInfo = CW20AssetInfo | NativeAssetInfo;
-
-export type Asset = {
-  info: AssetInfo;
-  amount: string;
+export type Send = {
+  send: {
+    amount: string;
+    contract: string;
+    msg: string;
+  };
 };
 
-export type Pool = {
-  assets: [Asset, Asset];
-  total_share: string;
+// ---------------------------------------------
+// QueryMsg
+// ---------------------------------------------
+export type Balance = {
+  balance: {
+    address: string;
+  };
 };
 
-export type Pair = {
-  asset_infos: [AssetInfo, AssetInfo];
-  contract: CW20Addr;
-  lpToken: CW20Addr;
+export type BalanceResponse = {
+  balance: string;
 };
 
-export type Token = {
-  protocol: string;
+export type TokenInfo = {
+  token_info: {};
+};
+
+export type TokenInfoResponse = {
+  decimals: number;
+  name: string;
   symbol: string;
-  token: string;
-  icon: string;
-};
-
-export type Tokens = {
-  [token: string]: Token;
-};
-
-export type Routes = {
-  [from: string]: {
-    [to: string]: Pair;
-  };
-};
-
-export interface LocalNetworkConfig {
-  fee: { gasPrice: number; amount: number };
-}
-
-export type Data = {
-  mainnet: {
-    tokens: any;
-    pairs: any;
-  };
-  testnet: {
-    tokens: any;
-    pairs: any;
-  };
+  total_supply: string;
 };
