@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, useMemo } from "react";
+import { useCallback, useState, useMemo, useEffect } from "react";
 import {
   Coins,
   Coin,
@@ -6,14 +6,14 @@ import {
   CreateTxOptions,
 } from "@terra-money/terra.js";
 import { useWallet, UserDenied, Timeout } from "@terra-money/wallet-provider";
+import { useMutation, useQuery } from "react-query";
 
 import { useTerraWebapp } from "../context";
 import { useAddress } from "./useAddress";
-import { useMutation, useQuery } from "react-query";
 
 type Params = {
   msgs: MsgExecuteContract[];
-  onSuccess?: () => void;
+  onSuccess?: (txHash: string) => void;
   onError?: () => void;
 };
 
@@ -41,20 +41,6 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
     }
   );
 
-  const { data: txInfo } = useQuery(
-    ["txInfo", txHash],
-    () => {
-      if (txHash == null) {
-        return Promise.reject();
-      }
-
-      return client.tx.txInfo(txHash);
-    },
-    {
-      enabled: txHash != null,
-    }
-  );
-
   const { mutate, isLoading: isPosting } = useMutation(
     (data: CreateTxOptions) => {
       return post(data);
@@ -78,10 +64,8 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
         }
       },
       onSuccess: (data) => {
-        // Boom baby!
         setTxHash(data.result.txhash);
         setResult(data);
-        onSuccess?.();
       },
       onSettled: () => {
         reset();
@@ -89,10 +73,21 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
     }
   );
 
+  const { data: txInfo } = useQuery(
+    ["txInfo", txHash],
+    () => {
+      // @ts-expect-error
+      return client.tx.txInfo(txHash);
+    },
+    {
+      enabled: txHash != null,
+      retry: true,
+    }
+  );
+
   const reset = () => {
     setResult(null);
     setError(null);
-    setIsBroadcasting(false);
   };
 
   const submit = useCallback(async () => {
@@ -117,12 +112,10 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
   }, [fee, msgs, isEstimating]);
 
   useEffect(() => {
-    console.log("txInfo", txInfo);
+    if (txInfo != null && txHash != null) {
+      onSuccess?.(txHash);
+    }
   }, [txInfo]);
-
-  useEffect(() => {
-    console.log("txInfo", fee);
-  }, [fee]);
 
   return {
     fee,
