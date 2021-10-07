@@ -1,5 +1,4 @@
 import { useQuery } from "react-query";
-import { isNativeToken } from "@arthuryeti/terraswap";
 
 import useAddress from "../hooks/useAddress";
 import { useTerraWebapp } from "../context";
@@ -17,7 +16,8 @@ export const useBalance = (token: string, contractAddress?: string) => {
 
   // TODO: Fix type to have Coins and Balance
   const { data, isLoading } = useQuery<any>(["balance", token, address], () => {
-    if (isNativeToken(token)) {
+    // TODO: isNativeToken function
+    if (token.startsWith("u")) {
       return client.bank.balance(address);
     }
 

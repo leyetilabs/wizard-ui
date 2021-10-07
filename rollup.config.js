@@ -25,7 +25,6 @@ export default {
     "@terra-money/wallet-provider",
     "numeral",
     "react-query",
-    "@arthuryeti/terraswap",
     "bignumber.js",
   ],
 };

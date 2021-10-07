@@ -1,6 +1,6 @@
 {
   "name": "@arthuryeti/terra",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "itey.arthur@gmail.com",
   "license": "MIT",
   "repository": "https://github.com/arthuryeti/terra.git",
@@ -43,7 +43,6 @@
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-typescript2": "^0.30.0",
     "tslib": "^2.3.1",
-    "typescript": "^4.4.3",
-    "@arthuryeti/terraswap": "^0.1.6"
+    "typescript": "^4.4.3"
   }
 }
