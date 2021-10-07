@@ -41,8 +41,6 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
     () => {
       setError(null);
 
-      console.log("ouii 2");
-
       return client.tx.estimateFee(address, msgs, {
         gasPrices: new Coins([new Coin("uusd", 0.38)]),
         gasAdjustment: 1.2,
