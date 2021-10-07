@@ -17,6 +17,7 @@ import { useMutation, useQuery } from "react-query";
 
 import { useTerraWebapp } from "../context";
 import { useAddress } from "./useAddress";
+import useDebounceValue from "./useDebounceValue";
 
 type Params = {
   msgs: MsgExecuteContract[];
@@ -28,6 +29,7 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
   const { post } = useWallet();
   const address = useAddress();
   const { client } = useTerraWebapp();
+  const debouncedMsgs = useDebounceValue(msgs, 200);
 
   const [isBroadcasting, setIsBroadcasting] = useState<boolean>(false);
   const [result, setResult] = useState<any>(null);
@@ -35,8 +37,12 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
   const [error, setError] = useState<any>(null);
 
   const { data: fee, isLoading: isEstimating } = useQuery(
-    ["fee", msgs],
+    ["fee", debouncedMsgs],
     () => {
+      setError(null);
+
+      console.log("ouii 2");
+
       return client.tx.estimateFee(address, msgs, {
         gasPrices: new Coins([new Coin("uusd", 0.38)]),
         gasAdjustment: 1.2,
@@ -44,7 +50,12 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
       });
     },
     {
-      enabled: address != null && msgs != null,
+      enabled: address != null && debouncedMsgs != null,
+      refetchOnWindowFocus: false,
+      retry: false,
+      onError: (e: any) => {
+        setError(e.response.data.error);
+      },
     }
   );
 
