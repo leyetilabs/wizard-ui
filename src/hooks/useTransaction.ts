@@ -5,7 +5,14 @@ import {
   MsgExecuteContract,
   CreateTxOptions,
 } from "@terra-money/terra.js";
-import { useWallet, UserDenied, Timeout } from "@terra-money/wallet-provider";
+import {
+  useWallet,
+  UserDenied,
+  CreateTxFailed,
+  TxFailed,
+  TxUnspecifiedError,
+  Timeout,
+} from "@terra-money/wallet-provider";
 import { useMutation, useQuery } from "react-query";
 
 import { useTerraWebapp } from "../context";
@@ -14,7 +21,7 @@ import { useAddress } from "./useAddress";
 type Params = {
   msgs: MsgExecuteContract[];
   onSuccess?: (txHash: string) => void;
-  onError?: () => void;
+  onError?: (txHash?: string) => void;
 };
 
 export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
@@ -24,7 +31,7 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
 
   const [isBroadcasting, setIsBroadcasting] = useState<boolean>(false);
   const [result, setResult] = useState<any>(null);
-  const [txHash, setTxHash] = useState<string | null>(null);
+  const [txHash, setTxHash] = useState<string | undefined>(undefined);
   const [error, setError] = useState<any>(null);
 
   const { data: fee, isLoading: isEstimating } = useQuery(
@@ -41,7 +48,7 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
     }
   );
 
-  const { mutate, isLoading: isPosting } = useMutation(
+  const { mutate } = useMutation(
     (data: CreateTxOptions) => {
       return post(data);
     },
@@ -49,26 +56,30 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
       onMutate: () => {
         setIsBroadcasting(true);
       },
-      onError: (error: any) => {
+      onError: (e: unknown) => {
         setIsBroadcasting(false);
 
-        if (error instanceof Timeout) {
-          setError("Timeout");
-        } else if (error instanceof UserDenied) {
-          reset();
+        if (e instanceof UserDenied) {
           setError("User Denied");
-          onError?.();
+        } else if (e instanceof CreateTxFailed) {
+          setError("Create Tx Failed: " + e.message);
+        } else if (e instanceof TxFailed) {
+          setError("Tx Failed: " + e.message);
+        } else if (e instanceof Timeout) {
+          setError("Timeout");
+        } else if (e instanceof TxUnspecifiedError) {
+          setError("Unspecified Error: " + e.message);
         } else {
-          setError(error);
-          onError?.();
+          setError(
+            "Unknown Error: " + (e instanceof Error ? e.message : String(e))
+          );
         }
+
+        onError?.(error);
       },
       onSuccess: (data) => {
         setTxHash(data.result.txhash);
         setResult(data);
-      },
-      onSettled: () => {
-        reset();
       },
     }
   );
@@ -86,6 +97,7 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
   );
 
   const reset = () => {
+    setIsBroadcasting(false);
     setResult(null);
     setError(null);
   };
@@ -113,7 +125,12 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
 
   useEffect(() => {
     if (txInfo != null && txHash != null) {
-      onSuccess?.(txHash);
+      setIsBroadcasting(false);
+      if (txInfo.code) {
+        onError?.(txHash);
+      } else {
+        onSuccess?.(txHash);
+      }
     }
   }, [txInfo]);
 
@@ -125,7 +142,6 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
     error,
     isEstimating,
     isReady,
-    isPosting,
     isBroadcasting,
     reset,
   };
