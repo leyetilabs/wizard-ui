@@ -20,7 +20,7 @@ import { useAddress } from "./useAddress";
 import useDebounceValue from "./useDebounceValue";
 
 type Params = {
-  msgs: MsgExecuteContract[];
+  msgs: MsgExecuteContract[] | null;
   onSuccess?: (txHash: string) => void;
   onError?: (txHash?: string) => void;
 };
@@ -40,6 +40,10 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
     ["fee", debouncedMsgs],
     () => {
       setError(null);
+
+      if (msgs == null) {
+        return;
+      }
 
       return client.tx.estimateFee(address, msgs, {
         gasPrices: new Coins([new Coin("uusd", 0.38)]),
