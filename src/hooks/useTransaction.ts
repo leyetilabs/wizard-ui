@@ -90,6 +90,7 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
         setTxStep(TxStep.Ready);
       },
       onError: (e: any) => {
+        setTxStep(TxStep.Idle);
         setError(e.response.data.error);
       },
     }
