@@ -1,4 +1,4 @@
-import { useCallback, useState, useMemo, useEffect } from "react";
+import { useCallback, useState, useEffect } from "react";
 import {
   Coins,
   Coin,
@@ -19,6 +19,37 @@ import { useTerraWebapp } from "../context";
 import { useAddress } from "./useAddress";
 import useDebounceValue from "./useDebounceValue";
 
+export enum TxStep {
+  /**
+   * Idle
+   */
+  Idle = 0,
+  /**
+   * Estimating fees
+   */
+  Estimating = 1,
+  /**
+   * Ready to post transaction
+   */
+  Ready = 2,
+  /**
+   * Signing transaction in Terra Station
+   */
+  Posting = 3,
+  /**
+   * Broadcasting
+   */
+  Broadcasting = 4,
+  /**
+   * Succesful
+   */
+  Success = 5,
+  /**
+   * Failed
+   */
+  Failed = 6,
+}
+
 type Params = {
   msgs: MsgExecuteContract[] | null;
   onSuccess?: (txHash: string) => void;
@@ -26,24 +57,24 @@ type Params = {
 };
 
 export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
+  const { client } = useTerraWebapp();
   const { post } = useWallet();
   const address = useAddress();
-  const { client } = useTerraWebapp();
   const debouncedMsgs = useDebounceValue(msgs, 200);
 
-  const [isBroadcasting, setIsBroadcasting] = useState<boolean>(false);
-  const [result, setResult] = useState<any>(null);
+  const [txStep, setTxStep] = useState<TxStep>(TxStep.Idle);
   const [txHash, setTxHash] = useState<string | undefined>(undefined);
-  const [error, setError] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const { data: fee, isLoading: isEstimating } = useQuery(
+  const { data: fee } = useQuery(
     ["fee", debouncedMsgs],
     () => {
-      setError(null);
-
       if (msgs == null) {
         return;
       }
+
+      setError(null);
+      setTxStep(TxStep.Estimating);
 
       return client.tx.estimateFee(address, msgs, {
         gasPrices: new Coins([new Coin("uusd", 0.38)]),
@@ -55,6 +86,9 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
       enabled: address != null && debouncedMsgs != null,
       refetchOnWindowFocus: false,
       retry: false,
+      onSuccess: () => {
+        setTxStep(TxStep.Ready);
+      },
       onError: (e: any) => {
         setError(e.response.data.error);
       },
@@ -67,10 +101,10 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
     },
     {
       onMutate: () => {
-        setIsBroadcasting(true);
+        setTxStep(TxStep.Posting);
       },
       onError: (e: unknown) => {
-        setIsBroadcasting(false);
+        setTxStep(TxStep.Failed);
 
         if (e instanceof UserDenied) {
           setError("User Denied");
@@ -88,11 +122,11 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
           );
         }
 
-        onError?.(error);
+        onError?.();
       },
       onSuccess: (data) => {
+        setTxStep(TxStep.Broadcasting);
         setTxHash(data.result.txhash);
-        setResult(data);
       },
     }
   );
@@ -110,9 +144,9 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
   );
 
   const reset = () => {
-    setIsBroadcasting(false);
-    setResult(null);
+    setTxStep(TxStep.Idle);
     setError(null);
+    setTxHash(undefined);
   };
 
   const submit = useCallback(async () => {
@@ -120,28 +154,19 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
       return;
     }
 
-    setError(null);
-
     mutate({
       msgs,
       fee,
     });
   }, [msgs, fee, mutate]);
 
-  const isReady = useMemo(() => {
-    if (fee == null || msgs == null || isEstimating) {
-      return false;
-    }
-
-    return msgs.length > 0;
-  }, [fee, msgs, isEstimating]);
-
   useEffect(() => {
     if (txInfo != null && txHash != null) {
-      setIsBroadcasting(false);
       if (txInfo.code) {
+        setTxStep(TxStep.Failed);
         onError?.(txHash);
       } else {
+        setTxStep(TxStep.Success);
         onSuccess?.(txHash);
       }
     }
@@ -150,12 +175,9 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
   return {
     fee,
     submit,
-    result,
+    txStep,
     txHash,
     error,
-    isEstimating,
-    isReady,
-    isBroadcasting,
     reset,
   };
 };
