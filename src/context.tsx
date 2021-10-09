@@ -1,4 +1,4 @@
-import {
+import React, {
   FC,
   ReactNode,
   useMemo,
@@ -6,23 +6,23 @@ import {
   createContext,
   useContext,
   Consumer,
-} from "react";
-import { Coin, Dec, LCDClient } from "@terra-money/terra.js";
-import { useWallet, NetworkInfo } from "@terra-money/wallet-provider";
-import { useQuery } from "react-query";
+} from 'react'
+import { Coin, Dec, LCDClient } from '@terra-money/terra.js'
+import { useWallet, NetworkInfo } from '@terra-money/wallet-provider'
+import { useQuery } from 'react-query'
 
 const DEFAULT_NETWORK = {
-  name: "mainnet",
-  chainID: "colombus-5",
-  lcd: "https://lcd.terra.dev",
-};
+  name: 'mainnet',
+  chainID: 'colombus-5',
+  lcd: 'https://lcd.terra.dev',
+}
 
 type TerraWebapp = {
-  network: NetworkInfo;
-  client: LCDClient;
-  taxCap: Coin | undefined;
-  taxRate: Dec | undefined;
-};
+  network: NetworkInfo
+  client: LCDClient
+  taxCap: Coin | undefined
+  taxRate: Dec | undefined
+}
 
 export const TerraWebappContext: Context<TerraWebapp> =
   createContext<TerraWebapp>({
@@ -33,29 +33,29 @@ export const TerraWebappContext: Context<TerraWebapp> =
     }),
     taxCap: undefined,
     taxRate: undefined,
-  });
+  })
 
 type Props = {
-  children: ReactNode;
-};
+  children: ReactNode
+}
 
 export const TerraWebappProvider: FC<Props> = ({ children }) => {
-  const { network } = useWallet();
-
-  const { data: taxCap } = useQuery("taxCap", () => {
-    return client.treasury.taxCap("uusd");
-  });
-
-  const { data: taxRate } = useQuery("taxRate", () => {
-    return client.treasury.taxRate();
-  });
+  const { network } = useWallet()
 
   const client = useMemo(() => {
     return new LCDClient({
       URL: network.lcd,
       chainID: network.chainID,
-    });
-  }, [network]);
+    })
+  }, [network])
+
+  const { data: taxCap } = useQuery('taxCap', () => {
+    return client.treasury.taxCap('uusd')
+  })
+
+  const { data: taxRate } = useQuery('taxRate', () => {
+    return client.treasury.taxRate()
+  })
 
   const value = useMemo(() => {
     return {
@@ -63,19 +63,19 @@ export const TerraWebappProvider: FC<Props> = ({ children }) => {
       client,
       taxCap,
       taxRate,
-    };
-  }, [network, client, taxCap, taxRate]);
+    }
+  }, [network, client, taxCap, taxRate])
 
   return (
     <TerraWebappContext.Provider value={value}>
       {children}
     </TerraWebappContext.Provider>
-  );
-};
+  )
+}
 
 export function useTerraWebapp(): TerraWebapp {
-  return useContext(TerraWebappContext);
+  return useContext(TerraWebappContext)
 }
 
 export const TerraWebappConsumer: Consumer<TerraWebapp> =
-  TerraWebappContext.Consumer;
+  TerraWebappContext.Consumer

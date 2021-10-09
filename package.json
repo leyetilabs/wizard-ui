@@ -1,48 +1,95 @@
 {
   "name": "@arthuryeti/terra",
   "version": "0.2.7",
-  "author": "itey.arthur@gmail.com",
-  "license": "MIT",
   "repository": "https://github.com/arthuryeti/terra.git",
   "main": "dist/index.js",
-  "module": "dist/index.es.js",
-  "files": [
-    "dist"
-  ],
+  "types": "types/index.d.ts",
+  "module": "dist/@arthuryeti/terra.esm.js",
   "engines": {
-    "node": ">=8",
-    "npm": ">=5"
+    "node": ">=12"
   },
   "scripts": {
-    "build": "rollup -c",
-    "start": "rollup -c -w"
+    "prebuild": "rimraf dist",
+    "build": "npm-run-all --parallel build:main build:bundle:main",
+    "build:bundle:main": "kcd-scripts build -- --bundle --no-clean",
+    "build:main": "kcd-scripts build --no-clean",
+    "format": "kcd-scripts format",
+    "lint": "kcd-scripts lint",
+    "setup": "npm install && npm run validate -s",
+    "test": "kcd-scripts test",
+    "test:update": "npm test -- --updateSnapshot --coverage",
+    "typecheck": "kcd-scripts typecheck",
+    "validate": "kcd-scripts validate"
   },
-  "peerDependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
-  },
-  "devDependencies": {
-    "@rollup/plugin-commonjs": "^21.0.0",
-    "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^13.0.5",
+  "files": [
+    "dist",
+    "types/*.d.ts"
+  ],
+  "keywords": [
+    "terra",
+    "react",
+    "ui"
+  ],
+  "author": "Arthur Yeti <itey.arthur@gmail.com> (https://arthuryeti.com)",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/runtime": "^7.15.4",
     "@terra-money/terra.js": "^2.0.14",
     "@terra-money/wallet-provider": "^2.2.0",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.1.2",
+    "@testing-library/react-hooks": "^7.0.2",
+    "react-query": "^3.26.0"
+  },
+  "devDependencies": {
+    "@peculiar/webcrypto": "^1.1.7",
+    "@terra-dev/use-wallet": "^2.2.0",
     "@types/lodash": "^4.14.175",
     "@types/numeral": "^2.0.2",
     "@types/react": "^17.0.27",
     "@types/react-dom": "^17.0.9",
-    "babel-core": "^6.26.3",
-    "babel-runtime": "^6.26.0",
+    "@typescript-eslint/parser": "^4.33.0",
     "bignumber.js": "^9.0.1",
+    "eslint-config-kentcdodds": "^19.2.0",
+    "eslint-import-resolver-typescript": "^2.5.0",
+    "eslint-plugin-import": "^2.24.2",
+    "kcd-scripts": "^11.2.2",
     "lodash": "^4.17.21",
+    "npm-run-all": "^4.1.5",
     "numeral": "^2.0.6",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-query": "^3.25.1",
-    "rollup": "^2.58.0",
-    "rollup-plugin-peer-deps-external": "^2.2.4",
-    "rollup-plugin-typescript2": "^0.30.0",
-    "tslib": "^2.3.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^27.0.5",
     "typescript": "^4.4.3"
-  }
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-dom": "*"
+  },
+  "eslintConfig": {
+    "extends": "./node_modules/kcd-scripts/eslint.js",
+    "rules": {
+      "react/prop-types": "off",
+      "react/no-adjacent-inline-elements": "off",
+      "import/no-unassigned-import": "off",
+      "import/named": "off",
+      "react/display-name": "off",
+      "testing-library/no-container": "off",
+      "testing-library/no-dom-import": "off",
+      "testing-library/no-unnecessary-act": "off",
+      "testing-library/prefer-user-event": "off"
+    },
+    "settings": {
+      "import/resolver": {
+        "typescript": {}
+      }
+    }
+  },
+  "eslintIgnore": [
+    "node_modules",
+    "coverage",
+    "dist",
+    "*.d.ts"
+  ]
 }

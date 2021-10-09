@@ -3,39 +3,39 @@
 // ---------------------------------------------
 export type IncreaseAllowance = {
   increase_allowance: {
-    spender: string;
-    amount: string;
-  };
-};
+    spender: string
+    amount: string
+  }
+}
 
 export type Send = {
   send: {
-    amount: string;
-    contract: string;
-    msg: string;
-  };
-};
+    amount: string
+    contract: string
+    msg: string
+  }
+}
 
 // ---------------------------------------------
 // QueryMsg
 // ---------------------------------------------
 export type Balance = {
   balance: {
-    address: string;
-  };
-};
+    address: string
+  }
+}
 
 export type BalanceResponse = {
-  balance: string;
-};
+  balance: string
+}
 
 export type TokenInfo = {
-  token_info: {};
-};
+  token_info: {}
+}
 
 export type TokenInfoResponse = {
-  decimals: number;
-  name: string;
-  symbol: string;
-  total_supply: string;
-};
+  decimals: number
+  name: string
+  symbol: string
+  total_supply: string
+}
