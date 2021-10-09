@@ -1,19 +1,12 @@
 import { renderHook } from '@testing-library/react-hooks'
-import { LocalTerra } from '@terra-money/terra.js'
 
 import { useAddress } from '../useAddress'
-
-const lt = new LocalTerra()
-const mockTest1 = lt.wallets.test1
-
-jest.mock('@terra-money/wallet-provider', () => ({
-  useConnectedWallet: () => ({
-    terraAddress: mockTest1.key.accAddress,
-  }),
-}))
+import { createWrapper } from '../../../tests/utils'
 
 test('exposes terra wallet address', () => {
-  const { result } = renderHook(useAddress)
+  const { result } = renderHook(useAddress, {
+    wrapper: createWrapper(),
+  })
 
-  expect(result.current).toBe(mockTest1.key.accAddress)
+  expect(result.current).toBe('terra1hajtg9chne7vt0ue0jp95jtl6zclndnw7qqm7l')
 })
