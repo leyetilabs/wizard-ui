@@ -31,6 +31,6 @@ export const toNumber = (value: string = '0'): number => {
   return new BigNumber(value).toNumber()
 }
 
-export const num = (value: string = '0') => {
+export const num = (value: string = '0'): BigNumber => {
   return new BigNumber(value)
 }

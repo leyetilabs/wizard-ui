@@ -1,9 +1,8 @@
 {
   "name": "@arthuryeti/terra",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "repository": "https://github.com/arthuryeti/terra.git",
   "main": "dist/index.js",
-  "types": "types/index.d.ts",
   "module": "dist/@arthuryeti/terra.esm.js",
   "engines": {
     "node": ">=12"
