@@ -1,6 +1,6 @@
 {
   "name": "@arthuryeti/terra",
-  "version": "0.2.7",
+  "version": "0.3.0",
   "repository": "https://github.com/arthuryeti/terra.git",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
