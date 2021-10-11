@@ -68,10 +68,10 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
   const [error, setError] = useState<unknown | null>(null)
 
   const { data: fee } = useQuery<unknown, unknown, StdFee | null>(
-    ['fee', debouncedMsgs],
+    ['fee', debouncedMsgs, error],
     () => {
       if (debouncedMsgs == null || txStep != TxStep.Idle || error != null) {
-        throw new Error('Error in estimating the fee')
+        throw new Error('Error in estimaging fee')
       }
 
       setError(null)
@@ -84,7 +84,7 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
       })
     },
     {
-      enabled: debouncedMsgs != null && txStep == TxStep.Idle,
+      enabled: debouncedMsgs != null && txStep == TxStep.Idle && error == null,
       refetchOnWindowFocus: false,
       retry: false,
       onSuccess: () => {
@@ -99,6 +99,8 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
           // @ts-expect-error - don't know anything about error
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           setError(e.response.data.error)
+        } else {
+          setError('Something went wrong')
         }
       },
     },
@@ -183,6 +185,21 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
       }
     }
   }, [txInfo, onError, onSuccess, txHash])
+
+  useEffect(() => {
+    if (error) {
+      setError(null)
+    }
+
+    if (
+      txStep != TxStep.Idle &&
+      txStep != TxStep.Success &&
+      txStep != TxStep.Failed
+    ) {
+      setTxStep(TxStep.Idle)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedMsgs])
 
   return {
     fee,
