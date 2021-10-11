@@ -67,24 +67,24 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
   const [txHash, setTxHash] = useState<string | undefined>(undefined)
   const [error, setError] = useState<unknown | null>(null)
 
-  const { data: fee } = useQuery<unknown, unknown, StdFee>(
+  const { data: fee } = useQuery<unknown, unknown, StdFee | null>(
     ['fee', debouncedMsgs],
     () => {
-      if (msgs == null) {
-        return
+      if (debouncedMsgs == null || txStep != TxStep.Idle) {
+        return null
       }
 
       setError(null)
       setTxStep(TxStep.Estimating)
 
-      return client.tx.estimateFee(address, msgs, {
+      return client.tx.estimateFee(address, debouncedMsgs, {
         gasPrices: new Coins([new Coin('uusd', 0.38)]),
         gasAdjustment: 1.2,
         feeDenoms: ['uusd'],
       })
     },
     {
-      enabled: debouncedMsgs != null,
+      enabled: debouncedMsgs != null && txStep == TxStep.Idle,
       refetchOnWindowFocus: false,
       retry: false,
       onSuccess: () => {
