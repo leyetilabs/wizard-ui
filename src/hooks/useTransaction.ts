@@ -70,8 +70,8 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
   const { data: fee } = useQuery<unknown, unknown, StdFee | null>(
     ['fee', debouncedMsgs],
     () => {
-      if (debouncedMsgs == null || txStep != TxStep.Idle) {
-        return null
+      if (debouncedMsgs == null || txStep != TxStep.Idle || error != null) {
+        throw new Error('Error in estimating the fee')
       }
 
       setError(null)
@@ -95,7 +95,11 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
 
         // @ts-expect-error - don't know anything about error
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        setError(e.response.data.error)
+        if (e?.response?.data?.error) {
+          // @ts-expect-error - don't know anything about error
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          setError(e.response.data.error)
+        }
       },
     },
   )
