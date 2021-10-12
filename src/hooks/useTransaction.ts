@@ -91,8 +91,6 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
         setTxStep(TxStep.Ready)
       },
       onError: e => {
-        setTxStep(TxStep.Idle)
-
         // @ts-expect-error - don't know anything about error
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         if (e?.response?.data?.error) {
@@ -102,6 +100,8 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
         } else {
           setError('Something went wrong')
         }
+
+        setTxStep(TxStep.Idle)
       },
     },
   )
@@ -115,8 +115,6 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
         setTxStep(TxStep.Posting)
       },
       onError: (e: unknown) => {
-        setTxStep(TxStep.Failed)
-
         if (e instanceof UserDenied) {
           setError('User Denied')
         } else if (e instanceof CreateTxFailed) {
@@ -132,6 +130,8 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
             `Unknown Error: ${e instanceof Error ? e.message : String(e)}`,
           )
         }
+
+        setTxStep(TxStep.Failed)
 
         onError?.()
       },
@@ -194,7 +194,8 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
     if (
       txStep != TxStep.Idle &&
       txStep != TxStep.Success &&
-      txStep != TxStep.Failed
+      txStep != TxStep.Failed &&
+      txHash == null
     ) {
       setTxStep(TxStep.Idle)
     }

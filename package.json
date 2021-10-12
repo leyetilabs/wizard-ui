@@ -1,6 +1,6 @@
 {
   "name": "@arthuryeti/terra",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "repository": "https://github.com/arthuryeti/terra.git",
   "main": "dist/index.js",
   "module": "dist/@arthuryeti/terra.esm.js",
