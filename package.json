@@ -1,6 +1,6 @@
 {
   "name": "@arthuryeti/terra",
-  "version": "0.3.6",
+  "version": "0.0.0-development",
   "repository": "https://github.com/arthuryeti/terra.git",
   "main": "dist/index.js",
   "module": "dist/@arthuryeti/terra.esm.js",
@@ -18,7 +18,9 @@
     "test": "kcd-scripts test",
     "test:update": "npm test -- --updateSnapshot --coverage",
     "typecheck": "kcd-scripts typecheck",
-    "validate": "kcd-scripts validate"
+    "validate": "kcd-scripts validate",
+    "semantic-release": "semantic-release",
+    "commit": "git-cz"
   },
   "files": [
     "dist",
@@ -49,6 +51,8 @@
     "@types/react-dom": "^17.0.9",
     "@typescript-eslint/parser": "^4.33.0",
     "bignumber.js": "^9.0.1",
+    "commitizen": "^4.2.4",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint-config-kentcdodds": "^19.2.0",
     "eslint-import-resolver-typescript": "^2.5.0",
     "eslint-plugin-import": "^2.24.2",
@@ -59,6 +63,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "rimraf": "^3.0.2",
+    "semantic-release": "^18.0.0",
     "ts-jest": "^27.0.5",
     "typescript": "^4.4.3"
   },
@@ -90,5 +95,10 @@
     "coverage",
     "dist",
     "*.d.ts"
-  ]
+  ],
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-conventional-changelog"
+    }
+  }
 }

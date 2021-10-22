@@ -78,7 +78,7 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
       setTxStep(TxStep.Estimating)
 
       return client.tx.estimateFee(address, debouncedMsgs, {
-        gasPrices: new Coins([new Coin('uusd', 0.38)]),
+        gasPrices: new Coins([new Coin('uusd', 0.15)]),
         gasAdjustment: 1.2,
         feeDenoms: ['uusd'],
       })
@@ -158,9 +158,9 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
   )
 
   const reset = () => {
-    setTxStep(TxStep.Idle)
     setError(null)
     setTxHash(undefined)
+    setTxStep(TxStep.Idle)
   }
 
   const submit = useCallback(async () => {
