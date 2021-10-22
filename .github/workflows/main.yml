@@ -1,4 +1,4 @@
-name: Release
+name: release
 on:
   push:
     branches:
@@ -20,7 +20,7 @@ jobs:
         run: npm ci
       - name: Build package
         run: npm run build
-      - name: Release
+      - name: release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
