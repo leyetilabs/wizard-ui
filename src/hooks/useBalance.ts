@@ -5,7 +5,7 @@ import { useAddress } from '../hooks/useAddress'
 import { useTerraWebapp } from '../context'
 import { BalanceResponse } from '../types'
 
-function isTypeBalanceResponse(
+function isBalanceResponse(
   value: BalanceResponse | Coins,
 ): value is BalanceResponse {
   return value.hasOwnProperty('balance')
@@ -44,7 +44,7 @@ export const useBalance = (token: string, contractAddress?: string): string => {
     return '0'
   }
 
-  if (isTypeBalanceResponse(data)) {
+  if (isBalanceResponse(data)) {
     return data.balance
   }
 
