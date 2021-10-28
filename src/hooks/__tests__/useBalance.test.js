@@ -57,5 +57,5 @@ test('balance of wrong cw20 token', async () => {
     timeout: 2500,
   })
 
-  expect(result.current).toBe('0')
+  expect(result.current).toBe(null)
 })

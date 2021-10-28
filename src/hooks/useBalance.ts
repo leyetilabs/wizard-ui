@@ -17,7 +17,10 @@ function isBalanceResponse(
  * @param contractAddress - override connected wallet address
  * @returns string;
  */
-export const useBalance = (token: string, contractAddress?: string): string => {
+export const useBalance = (
+  token: string,
+  contractAddress?: string,
+): string | null => {
   const { client } = useTerraWebapp()
   const terraAddress = useAddress()
   const address = contractAddress ?? terraAddress
@@ -40,15 +43,19 @@ export const useBalance = (token: string, contractAddress?: string): string => {
     })
   })
 
-  if (isLoading || data == null) {
+  if (isLoading) {
     return '0'
+  }
+
+  if (data == null) {
+    return null
   }
 
   if (isBalanceResponse(data)) {
     return data.balance
   }
 
-  return data.get(token)?.amount.toString() ?? '0'
+  return data.get(token)?.amount.toString() ?? null
 }
 
 export default useBalance
