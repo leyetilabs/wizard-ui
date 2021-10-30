@@ -206,6 +206,7 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
     fee,
     submit,
     txStep,
+    txInfo,
     txHash,
     error,
     reset,
