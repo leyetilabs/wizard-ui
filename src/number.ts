@@ -4,7 +4,6 @@ import numeral from 'numeral'
 import { ONE_TOKEN } from './constants'
 
 BigNumber.config({
-  DECIMAL_PLACES: 6,
   ROUNDING_MODE: BigNumber.ROUND_DOWN,
   EXPONENTIAL_AT: [-10, 20],
 })
