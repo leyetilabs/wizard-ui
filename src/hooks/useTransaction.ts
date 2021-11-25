@@ -4,7 +4,7 @@ import {
   Coin,
   MsgExecuteContract,
   CreateTxOptions,
-  StdFee,
+  Fee,
 } from '@terra-money/terra.js'
 import {
   useWallet,
@@ -17,7 +17,6 @@ import {
 import { useMutation, useQuery } from 'react-query'
 
 import { useTerraWebapp } from '../context'
-import { useAddress } from './useAddress'
 import useDebounceValue from './useDebounceValue'
 
 export enum TxStep {
@@ -58,30 +57,45 @@ type Params = {
 }
 
 export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
-  const { client } = useTerraWebapp()
+  const { client, accountInfo } = useTerraWebapp()
   const { post } = useWallet()
-  const address = useAddress()
   const debouncedMsgs = useDebounceValue(msgs, 200)
 
   const [txStep, setTxStep] = useState<TxStep>(TxStep.Idle)
   const [txHash, setTxHash] = useState<string | undefined>(undefined)
   const [error, setError] = useState<unknown | null>(null)
 
-  const { data: fee } = useQuery<unknown, unknown, StdFee | null>(
+  const { data: fee } = useQuery<unknown, unknown, Fee | null>(
     ['fee', debouncedMsgs, error],
     () => {
-      if (debouncedMsgs == null || txStep != TxStep.Idle || error != null) {
+      if (
+        debouncedMsgs == null ||
+        txStep != TxStep.Idle ||
+        error != null ||
+        accountInfo == null
+      ) {
         throw new Error('Error in estimaging fee')
       }
 
       setError(null)
       setTxStep(TxStep.Estimating)
 
-      return client.tx.estimateFee(address, debouncedMsgs, {
+      const txOptions = {
+        msgs: debouncedMsgs,
         gasPrices: new Coins([new Coin('uusd', 0.15)]),
         gasAdjustment: 1.2,
         feeDenoms: ['uusd'],
-      })
+      }
+
+      return client.tx.estimateFee(
+        [
+          {
+            sequenceNumber: accountInfo.getSequenceNumber(),
+            publicKey: accountInfo.getPublicKey(),
+          },
+        ],
+        txOptions,
+      )
     },
     {
       enabled: debouncedMsgs != null && txStep == TxStep.Idle && error == null,
@@ -93,10 +107,10 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
       onError: e => {
         // @ts-expect-error - don't know anything about error
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        if (e?.response?.data?.error) {
+        if (e?.response?.data?.message) {
           // @ts-expect-error - don't know anything about error
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          setError(e.response.data.error)
+          setError(e.response.data.message)
         } else {
           setError('Something went wrong')
         }

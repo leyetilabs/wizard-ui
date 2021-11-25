@@ -6,7 +6,7 @@ import { useTerraWebapp } from '../context'
 import { BalanceResponse } from '../types'
 
 function isBalanceResponse(
-  value: BalanceResponse | Coins,
+  value: BalanceResponse | [Coins],
 ): value is BalanceResponse {
   return value.hasOwnProperty('balance')
 }
@@ -29,7 +29,7 @@ export const useBalance = (
   const { data, isLoading } = useQuery<
     unknown,
     unknown,
-    BalanceResponse | Coins
+    BalanceResponse | [Coins]
   >(['balance', token, address], () => {
     // TODO: isNativeToken function
     if (token.startsWith('u')) {
@@ -55,7 +55,7 @@ export const useBalance = (
     return data.balance
   }
 
-  return data.get(token)?.amount.toString() ?? null
+  return data[0].get(token)?.amount.toString() ?? null
 }
 
 export default useBalance

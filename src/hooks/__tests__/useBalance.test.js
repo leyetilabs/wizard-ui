@@ -11,8 +11,10 @@ test('balance of native token', async () => {
     },
   )
 
+  console.log(result.current)
+
   await waitForValueToChange(() => result.current, {
-    timeout: 2500,
+    timeout: 3500,
   })
 
   expect(result.current).toBe('7071578255')
@@ -24,7 +26,7 @@ test('balance of empty native token', async () => {
   })
 
   await waitForNextUpdate({
-    timeout: 2500,
+    timeout: 3500,
   })
 
   expect(result.current).toBe('0')
@@ -39,7 +41,7 @@ test('balance of cw20 token', async () => {
   )
 
   await waitForNextUpdate({
-    timeout: 2500,
+    timeout: 3500,
   })
 
   expect(result.current).toBe('0')
@@ -54,7 +56,7 @@ test('balance of wrong cw20 token', async () => {
   )
 
   await waitForNextUpdate({
-    timeout: 2500,
+    timeout: 3500,
   })
 
   expect(result.current).toBe(null)

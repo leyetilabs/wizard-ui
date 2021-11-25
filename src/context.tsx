@@ -7,9 +7,11 @@ import React, {
   useContext,
   Consumer,
 } from 'react'
-import { Coin, Dec, LCDClient } from '@terra-money/terra.js'
+import { Coin, Dec, LCDClient, Account } from '@terra-money/terra.js'
 import { useWallet, NetworkInfo } from '@terra-money/wallet-provider'
 import { useQuery } from 'react-query'
+
+import { useAddress } from './hooks/useAddress'
 
 const DEFAULT_NETWORK = {
   name: 'mainnet',
@@ -22,6 +24,7 @@ type TerraWebapp = {
   client: LCDClient
   taxCap: Coin | undefined
   taxRate: Dec | undefined
+  accountInfo: Account | undefined
 }
 
 export const TerraWebappContext: Context<TerraWebapp> =
@@ -33,6 +36,7 @@ export const TerraWebappContext: Context<TerraWebapp> =
     }),
     taxCap: undefined,
     taxRate: undefined,
+    accountInfo: undefined,
   })
 
 type Props = {
@@ -41,6 +45,7 @@ type Props = {
 
 export const TerraWebappProvider: FC<Props> = ({ children }) => {
   const { network } = useWallet()
+  const address = useAddress()
 
   const client = useMemo(() => {
     return new LCDClient({
@@ -57,14 +62,19 @@ export const TerraWebappProvider: FC<Props> = ({ children }) => {
     return client.treasury.taxRate()
   })
 
+  const { data: accountInfo } = useQuery('accountInfo', () => {
+    return client.auth.accountInfo(address)
+  })
+
   const value = useMemo(() => {
     return {
       network,
       client,
       taxCap,
       taxRate,
+      accountInfo,
     }
-  }, [network, client, taxCap, taxRate])
+  }, [network, client, taxCap, taxRate, accountInfo])
 
   return (
     <TerraWebappContext.Provider value={value}>

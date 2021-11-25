@@ -6,7 +6,7 @@ global.crypto = new Crypto()
 
 jest.mock('@terra-money/wallet-provider', () => {
   const originalModule = jest.requireActual('@terra-money/wallet-provider')
-  const newModule = jest.requireActual('@terra-dev/use-wallet')
+  const newModule = jest.requireActual('@terra-money/use-wallet')
 
   return {
     ...originalModule,
