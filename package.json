@@ -36,12 +36,12 @@
   "dependencies": {
     "@babel/runtime": "^7.16.3",
     "@terra-money/terra.js": "3.0.1",
-    "@terra-money/use-wallet": "^3.0.1",
-    "@terra-money/wallet-provider": "^3.0.1",
+    "@terra-money/use-wallet": "^3.3.0",
+    "@terra-money/wallet-provider": "^3.3.0",
     "@testing-library/jest-dom": "^5.15.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/react-hooks": "^7.0.2",
-    "react-query": "^3.33.5"
+    "react-query": "^3.34.0"
   },
   "devDependencies": {
     "@peculiar/webcrypto": "^1.2.3",

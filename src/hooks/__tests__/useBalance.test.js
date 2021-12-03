@@ -11,8 +11,6 @@ test('balance of native token', async () => {
     },
   )
 
-  console.log(result.current)
-
   await waitForValueToChange(() => result.current, {
     timeout: 3500,
   })
