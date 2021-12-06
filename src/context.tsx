@@ -54,17 +54,20 @@ export const TerraWebappProvider: FC<Props> = ({ children }) => {
     })
   }, [network])
 
-  const { data: taxCap } = useQuery('taxCap', () => {
+  const { data: taxCap } = useQuery(['taxCap', network.chainID], () => {
     return client.treasury.taxCap('uusd')
   })
 
-  const { data: taxRate } = useQuery('taxRate', () => {
+  const { data: taxRate } = useQuery(['taxRate', network.chainID], () => {
     return client.treasury.taxRate()
   })
 
-  const { data: accountInfo } = useQuery('accountInfo', () => {
-    return client.auth.accountInfo(address)
-  })
+  const { data: accountInfo } = useQuery(
+    ['accountInfo', network.chainID],
+    () => {
+      return client.auth.accountInfo(address)
+    },
+  )
 
   const value = useMemo(() => {
     return {
