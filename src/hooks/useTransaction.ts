@@ -18,6 +18,7 @@ import { useMutation, useQuery } from 'react-query'
 
 import { useTerraWebapp } from '../context'
 import useDebounceValue from './useDebounceValue'
+import useAddress from './useAddress'
 
 export enum TxStep {
   /**
@@ -57,7 +58,8 @@ type Params = {
 }
 
 export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
-  const { client, accountInfo } = useTerraWebapp()
+  const { client } = useTerraWebapp()
+  const address = useAddress()
   const { post } = useWallet()
   const debouncedMsgs = useDebounceValue(msgs, 200)
 
@@ -67,13 +69,8 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
 
   const { data: fee } = useQuery<unknown, unknown, Fee | null>(
     ['fee', debouncedMsgs, error],
-    () => {
-      if (
-        debouncedMsgs == null ||
-        txStep != TxStep.Idle ||
-        error != null ||
-        accountInfo == null
-      ) {
+    async () => {
+      if (debouncedMsgs == null || txStep != TxStep.Idle || error != null) {
         throw new Error('Error in estimaging fee')
       }
 
@@ -86,6 +83,8 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
         gasAdjustment: 1.2,
         feeDenoms: ['uusd'],
       }
+
+      const accountInfo = await client.auth.accountInfo(address)
 
       return client.tx.estimateFee(
         [
