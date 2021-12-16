@@ -27,6 +27,10 @@ type TerraWebapp = {
   accountInfo: Account | undefined
 }
 
+type Config = {
+  lcdClientUrl?: string
+}
+
 export const TerraWebappContext: Context<TerraWebapp> =
   createContext<TerraWebapp>({
     network: DEFAULT_NETWORK,
@@ -41,13 +45,21 @@ export const TerraWebappContext: Context<TerraWebapp> =
 
 type Props = {
   children: ReactNode
+  config?: Config
 }
 
-export const TerraWebappProvider: FC<Props> = ({ children }) => {
+export const TerraWebappProvider: FC<Props> = ({ children, config }) => {
   const { network } = useWallet()
   const address = useAddress()
 
   const client = useMemo(() => {
+    if (config?.lcdClientUrl) {
+      return new LCDClient({
+        URL: config?.lcdClientUrl,
+        chainID: network.chainID,
+      })
+    }
+
     return new LCDClient({
       URL: network.lcd,
       chainID: network.chainID,
