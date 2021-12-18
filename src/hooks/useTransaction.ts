@@ -5,6 +5,7 @@ import {
   MsgExecuteContract,
   CreateTxOptions,
   Fee,
+  TxInfo,
 } from '@terra-money/terra.js'
 import {
   useWallet,
@@ -53,8 +54,8 @@ export enum TxStep {
 
 type Params = {
   msgs: MsgExecuteContract[] | null
-  onSuccess?: (txHash: string) => void
-  onError?: (txHash?: string) => void
+  onSuccess?: (txHash: string, txInfo?: TxInfo) => void
+  onError?: (txHash?: string, txInfo?: TxInfo) => void
 }
 
 export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
@@ -191,10 +192,10 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
     if (txInfo != null && txHash != null) {
       if (txInfo.code) {
         setTxStep(TxStep.Failed)
-        onError?.(txHash)
+        onError?.(txHash, txInfo)
       } else {
         setTxStep(TxStep.Success)
-        onSuccess?.(txHash)
+        onSuccess?.(txHash, txInfo)
       }
     }
   }, [txInfo, onError, onSuccess, txHash])
