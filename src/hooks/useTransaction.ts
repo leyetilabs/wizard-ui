@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from 'react'
+import { useCallback, useState, useEffect, useMemo } from 'react'
 import {
   Coins,
   Coin,
@@ -156,9 +156,9 @@ export const useTransaction = ({
         onError?.()
       },
       onSuccess: data => {
-        onBroadcasting?.(data.result.txhash)
         setTxStep(TxStep.Broadcasting)
         setTxHash(data.result.txhash)
+        onBroadcasting?.(data.result.txhash)
       },
     },
   )
@@ -212,26 +212,23 @@ export const useTransaction = ({
       setError(null)
     }
 
-    if (
-      txStep != TxStep.Idle &&
-      txStep != TxStep.Success &&
-      txStep != TxStep.Failed &&
-      txHash == null
-    ) {
+    if (txStep != TxStep.Idle) {
       setTxStep(TxStep.Idle)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedMsgs])
 
-  return {
-    fee,
-    submit,
-    txStep,
-    txInfo,
-    txHash,
-    error,
-    reset,
-  }
+  return useMemo(() => {
+    return {
+      fee,
+      submit,
+      txStep,
+      txInfo,
+      txHash,
+      error,
+      reset,
+    }
+  }, [fee, submit, txStep, txInfo, txHash, error, reset])
 }
 
 export default useTransaction
