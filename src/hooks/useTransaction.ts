@@ -54,11 +54,17 @@ export enum TxStep {
 
 type Params = {
   msgs: MsgExecuteContract[] | null
+  onBroadcasting?: (txHash: string) => void
   onSuccess?: (txHash: string, txInfo?: TxInfo) => void
   onError?: (txHash?: string, txInfo?: TxInfo) => void
 }
 
-export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
+export const useTransaction = ({
+  msgs,
+  onBroadcasting,
+  onSuccess,
+  onError,
+}: Params) => {
   const { client } = useTerraWebapp()
   const address = useAddress()
   const { post } = useWallet()
@@ -150,6 +156,7 @@ export const useTransaction = ({ msgs, onSuccess, onError }: Params) => {
         onError?.()
       },
       onSuccess: data => {
+        onBroadcasting?.(data.result.txhash)
         setTxStep(TxStep.Broadcasting)
         setTxHash(data.result.txhash)
       },
