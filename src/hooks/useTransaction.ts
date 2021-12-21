@@ -54,6 +54,7 @@ export enum TxStep {
 
 type Params = {
   msgs: MsgExecuteContract[] | null
+  gasAdjustment?: number
   onBroadcasting?: (txHash: string) => void
   onSuccess?: (txHash: string, txInfo?: TxInfo) => void
   onError?: (txHash?: string, txInfo?: TxInfo) => void
@@ -61,6 +62,7 @@ type Params = {
 
 export const useTransaction = ({
   msgs,
+  gasAdjustment = 1.2,
   onBroadcasting,
   onSuccess,
   onError,
@@ -87,7 +89,7 @@ export const useTransaction = ({
       const txOptions = {
         msgs: debouncedMsgs,
         gasPrices: new Coins([new Coin('uusd', 0.15)]),
-        gasAdjustment: 1.2,
+        gasAdjustment,
         feeDenoms: ['uusd'],
       }
 
