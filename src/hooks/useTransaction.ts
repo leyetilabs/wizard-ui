@@ -55,6 +55,7 @@ export enum TxStep {
 type Params = {
   msgs: MsgExecuteContract[] | null
   gasAdjustment?: number
+  estimateEnabled?: boolean
   onBroadcasting?: (txHash: string) => void
   onSuccess?: (txHash: string, txInfo?: TxInfo) => void
   onError?: (txHash?: string, txInfo?: TxInfo) => void
@@ -63,6 +64,7 @@ type Params = {
 export const useTransaction = ({
   msgs,
   gasAdjustment = 1.2,
+  estimateEnabled = true,
   onBroadcasting,
   onSuccess,
   onError,
@@ -106,7 +108,11 @@ export const useTransaction = ({
       )
     },
     {
-      enabled: debouncedMsgs != null && txStep == TxStep.Idle && error == null,
+      enabled:
+        debouncedMsgs != null &&
+        txStep == TxStep.Idle &&
+        error == null &&
+        estimateEnabled,
       refetchOnWindowFocus: false,
       retry: false,
       onSuccess: () => {
