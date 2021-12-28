@@ -36,6 +36,7 @@ export const useTx = ({
     },
     {
       onMutate: () => {
+        setTxHash(undefined)
         onPosting?.()
       },
       onError: (e: unknown) => {

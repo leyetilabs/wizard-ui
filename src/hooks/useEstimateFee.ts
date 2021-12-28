@@ -58,7 +58,7 @@ export const useEstimateFee = ({
       isLoading,
       error,
     }
-  }, [data, error, 3])
+  }, [data, isLoading, error])
 }
 
 export default useEstimateFee
