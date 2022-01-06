@@ -1,22 +1,17 @@
 import { useCallback, useState, useEffect, useMemo } from 'react'
 import { CreateTxOptions, TxInfo } from '@terra-money/terra.js'
-import {
-  useWallet,
-  UserDenied,
-  CreateTxFailed,
-  TxFailed,
-  TxUnspecifiedError,
-  Timeout,
-} from '@terra-money/wallet-provider'
+import { useWallet } from '@terra-money/wallet-provider'
 import { useMutation, useQuery } from 'react-query'
-
 import { useTerraWebapp } from '../context'
+import useTransactionError from './useTransactionError'
+import useContractError from './useContractError'
+import { TerraError } from '../types'
 
 type Params = {
   onPosting?: () => void
   onBroadcasting?: (txHash: string) => void
   onSuccess?: (txHash: string, txInfo?: TxInfo) => void
-  onError?: (txHash?: string, txInfo?: TxInfo) => void
+  onError?: (error: TerraError, txHash?: string, txInfo?: TxInfo) => void
 }
 
 export const useTx = ({
@@ -40,23 +35,7 @@ export const useTx = ({
         onPosting?.()
       },
       onError: (e: unknown) => {
-        let error = `Unknown Error: ${
-          e instanceof Error ? e.message : String(e)
-        }`
-
-        if (e instanceof UserDenied) {
-          error = 'User Denied'
-        } else if (e instanceof CreateTxFailed) {
-          error = `Create Tx Failed: ${e.message}`
-        } else if (e instanceof TxFailed) {
-          error = `Tx Failed: ${e.message}`
-        } else if (e instanceof Timeout) {
-          error = 'Timeout'
-        } else if (e instanceof TxUnspecifiedError) {
-          error = `Unspecified Error: ${e.message}`
-        } else {
-          error = `Unknown Error: ${e instanceof Error ? e.message : String(e)}`
-        }
+        const error = useContractError(e)
 
         onError?.(error)
       },
@@ -97,9 +76,11 @@ export const useTx = ({
   )
 
   useEffect(() => {
+    const error = useTransactionError(txInfo)
+
     if (txInfo != null && txHash != null) {
-      if (txInfo.code) {
-        onError?.(txHash, txInfo)
+      if (error) {
+        onError?.(error, txHash, txInfo)
       } else {
         onSuccess?.(txHash, txInfo)
       }

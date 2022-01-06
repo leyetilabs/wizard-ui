@@ -19,10 +19,10 @@ export const useEstimateFee = ({
   const { client } = useTerraWebapp()
   const address = useAddress()
 
-  const { data, isLoading, error } = useQuery<Fee | null>(
+  const { data, isLoading, error } = useQuery<Fee | null, any>(
     ['fee', msgs],
     async () => {
-      if (msgs == null || error != null) {
+      if (!msgs) {
         throw new Error('Msgs is null or Error is not null')
       }
 

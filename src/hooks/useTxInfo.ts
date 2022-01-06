@@ -3,11 +3,13 @@ import { TxInfo } from '@terra-money/terra.js'
 import { useQuery } from 'react-query'
 
 import { useTerraWebapp } from '../context'
+import { TerraError } from '../types'
+import useTransactionError from './useTransactionError'
 
 type Params = {
   txHash: string | null
   onSuccess?: (txHash: string, txInfo?: TxInfo) => void
-  onError?: (txHash?: string, txInfo?: TxInfo) => void
+  onError?: (error: TerraError, txHash?: string, txInfo?: TxInfo) => void
 }
 
 export const useTxInfo = ({ txHash, onSuccess, onError }: Params) => {
@@ -31,7 +33,8 @@ export const useTxInfo = ({ txHash, onSuccess, onError }: Params) => {
   useEffect(() => {
     if (data != null && txHash != null) {
       if (data.code) {
-        onError?.(txHash, data)
+        const error = useTransactionError(data)
+        onError?.(error, txHash, data)
       } else {
         onSuccess?.(txHash, data)
       }
