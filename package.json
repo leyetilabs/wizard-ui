@@ -35,13 +35,14 @@
   "license": "MIT",
   "dependencies": {
     "@babel/runtime": "^7.16.3",
-    "@terra-money/terra.js": "3.0.1",
-    "@terra-money/use-wallet": "^3.3.0",
-    "@terra-money/wallet-provider": "^3.3.0",
+    "@terra-money/terra.js": "3.0.4",
+    "@terra-money/use-wallet": "^3.7.0",
+    "@terra-money/wallet-provider": "^3.7.1",
     "@testing-library/jest-dom": "^5.15.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/react-hooks": "^7.0.2",
-    "react-query": "^3.34.0"
+    "react-query": "^3.34.8",
+    "swr": "^1.1.2"
   },
   "devDependencies": {
     "@peculiar/webcrypto": "^1.2.3",
@@ -50,7 +51,7 @@
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.11",
     "@typescript-eslint/parser": "^4.33.0",
-    "bignumber.js": "^9.0.1",
+    "bignumber.js": "^9.0.2",
     "commitizen": "^4.2.4",
     "cz-conventional-changelog": "^3.3.0",
     "eslint-config-kentcdodds": "^19.2.0",

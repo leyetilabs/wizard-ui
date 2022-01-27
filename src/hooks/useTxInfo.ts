@@ -1,8 +1,7 @@
 import { useEffect } from 'react'
 import { TxInfo } from '@terra-money/terra.js'
-import { useQuery } from 'react-query'
-
-import { useTerraWebapp } from '../context'
+import { useLCDClient } from '@terra-money/wallet-provider'
+import useSWR from 'swr'
 
 type Params = {
   txHash: string | null
@@ -11,20 +10,24 @@ type Params = {
 }
 
 export const useTxInfo = ({ txHash, onSuccess, onError }: Params) => {
-  const { client } = useTerraWebapp()
+  const client = useLCDClient()
 
-  const { data, isLoading } = useQuery(
-    ['txInfo', txHash],
+  const { data, error } = useSWR(
+    ['txInfoFromHook', txHash],
     () => {
       if (txHash == null) {
-        return
+        return null
       }
 
       return client.tx.txInfo(txHash)
     },
     {
-      enabled: txHash != null,
-      retry: true,
+      shouldRetryOnError: true,
+      errorRetryInterval: 2000,
+      errorRetryCount: 5,
+      revalidateOnReconnect: false,
+      revalidateOnFocus: false,
+      revalidateIfStale: false,
     },
   )
 
@@ -39,7 +42,7 @@ export const useTxInfo = ({ txHash, onSuccess, onError }: Params) => {
   }, [data, onError, onSuccess, txHash])
 
   return {
-    isLoading,
+    isLoading: !data && !error,
     txInfo: data,
   }
 }

@@ -1,8 +1,8 @@
-import { useQuery } from 'react-query'
 import { Coins } from '@terra-money/terra.js'
+import { useLCDClient } from '@terra-money/wallet-provider'
+import useSWR from 'swr'
 
 import { useAddress } from '../hooks/useAddress'
-import { useTerraWebapp } from '../context'
 import { BalanceResponse } from '../types'
 
 function isBalanceResponse(
@@ -21,29 +21,31 @@ export const useBalance = (
   token: string,
   contractAddress?: string,
 ): string | null => {
-  const { client } = useTerraWebapp()
+  const client = useLCDClient()
   const terraAddress = useAddress()
   const address = contractAddress ?? terraAddress
 
   // TODO: Fix type to have Coins and Balance
-  const { data, isLoading } = useQuery<
-    unknown,
-    unknown,
-    BalanceResponse | [Coins]
-  >(['balance', token, address], () => {
-    // TODO: isNativeToken function
-    if (token.startsWith('u')) {
-      return client.bank.balance(address)
-    }
+  const { data, error } = useSWR(
+    ['balance', token, address],
+    () => {
+      // TODO: isNativeToken function
+      if (token.startsWith('u')) {
+        return client.bank.balance(address)
+      }
 
-    return client.wasm.contractQuery(token, {
-      balance: {
-        address,
-      },
-    })
-  })
+      return client.wasm.contractQuery(token, {
+        balance: {
+          address,
+        },
+      })
+    },
+    {
+      revalidateOnMount: true,
+    },
+  )
 
-  if (isLoading) {
+  if (!error && !data) {
     return '0'
   }
 
@@ -51,10 +53,12 @@ export const useBalance = (
     return null
   }
 
+  // @ts-expect-error
   if (isBalanceResponse(data)) {
     return data.balance
   }
 
+  // @ts-expect-error
   return data[0].get(token)?.amount.toString() ?? null
 }
 

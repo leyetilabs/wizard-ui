@@ -1,25 +1,20 @@
 import { useMemo } from 'react'
-import { Coins, Coin, MsgExecuteContract, Fee } from '@terra-money/terra.js'
+import { Coins, Coin, MsgExecuteContract } from '@terra-money/terra.js'
+import { useLCDClient } from '@terra-money/wallet-provider'
+import useSWR from 'swr'
 
-import { useQuery } from 'react-query'
-import { useTerraWebapp } from '../context'
 import useAddress from './useAddress'
 
 type Params = {
   msgs: MsgExecuteContract[] | null
-  enabled?: boolean
   gasAdjustment?: number
 }
 
-export const useEstimateFee = ({
-  msgs,
-  enabled = true,
-  gasAdjustment = 1.2,
-}: Params) => {
-  const { client } = useTerraWebapp()
+export const useEstimateFee = ({ msgs, gasAdjustment = 1.2 }: Params) => {
   const address = useAddress()
+  const client = useLCDClient()
 
-  const { data, isLoading, error } = useQuery<Fee | null>(
+  const { data, error } = useSWR(
     ['fee', msgs],
     async () => {
       if (msgs == null || error != null) {
@@ -46,19 +41,19 @@ export const useEstimateFee = ({
       )
     },
     {
-      enabled: msgs != null && msgs.length > 0 && enabled,
-      refetchOnWindowFocus: false,
-      retry: false,
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
     },
   )
 
   return useMemo(() => {
     return {
       fee: data,
-      isLoading,
+      isLoading: !error && !data,
       error,
     }
-  }, [data, isLoading, error])
+  }, [data, error])
 }
 
 export default useEstimateFee
