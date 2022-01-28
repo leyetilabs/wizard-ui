@@ -1,16 +1,21 @@
 {
-  "name": "turborepo-basic-shared",
+  "name": "arthuryeti",
   "version": "0.0.0",
-  "private": true,
+  "private": false,
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev --parallel",
+    "dev": "turbo run dev --no-cache --parallel --continue",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "test": "turbo run test",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "release": "npm run build && npx changeset publish"
+  },
+  "dependencies": {
+    "@changesets/cli": "^2.20.0"
   },
   "devDependencies": {
     "prettier": "^2.5.1",
@@ -27,10 +32,16 @@
           ".next/**"
         ]
       },
+      "test": {
+        "dependsOn": []
+      },
       "lint": {
         "outputs": []
       },
       "dev": {
+        "cache": false
+      },
+      "clean": {
         "cache": false
       }
     }
