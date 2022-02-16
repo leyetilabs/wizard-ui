@@ -23,8 +23,9 @@ export const useTxInfo = ({ txHash, onSuccess, onError }: Params) => {
     },
     {
       shouldRetryOnError: true,
-      errorRetryInterval: 2000,
-      errorRetryCount: 5,
+      errorRetryInterval: 500,
+      dedupingInterval: 0,
+      errorRetryCount: 20,
       revalidateOnReconnect: false,
       revalidateOnFocus: false,
       revalidateIfStale: false,

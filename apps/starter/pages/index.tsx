@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "@chakra-ui/react";
 import { MsgExecuteContract, Coin } from "@terra-money/terra.js";
 import {
@@ -6,10 +6,12 @@ import {
   useAddress,
   useEstimateFee,
   useTx,
+  useTxInfo,
 } from "@arthuryeti/terra";
 
 export default function Web() {
   const address = useAddress();
+  const [txHash, setTxHash] = useState<string | null>(null);
 
   const msgs = useMemo(() => {
     const coins = [new Coin("uusd", toTerraAmount(2))];
@@ -43,8 +45,19 @@ export default function Web() {
     onPosting: () => {
       console.log("onPosting");
     },
-    onBroadcasting: () => {
+    onBroadcasting: (txHash) => {
       console.log("onBroadcasting");
+      setTxHash(txHash);
+    },
+    onError: () => {
+      console.log("onError");
+    },
+  });
+
+  useTxInfo({
+    txHash,
+    onSuccess: () => {
+      console.log("onSuccess");
     },
     onError: () => {
       console.log("onError");
