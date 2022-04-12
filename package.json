@@ -15,10 +15,10 @@
     "release": "npm run build && npx changeset publish"
   },
   "dependencies": {
-    "@changesets/cli": "^2.20.0"
+    "@changesets/cli": "^2.22.0"
   },
   "devDependencies": {
-    "prettier": "^2.5.1",
+    "prettier": "^2.6.2",
     "turbo": "latest"
   },
   "turbo": {

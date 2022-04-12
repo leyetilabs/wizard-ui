@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Flex, Text, Box, HStack, Heading } from "@chakra-ui/react";
+import { Flex, Box, HStack, Heading } from "@chakra-ui/react";
 
 import TerraWallet from "./TerraWallet";
 

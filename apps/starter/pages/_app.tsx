@@ -5,10 +5,10 @@ import {
   StaticWalletProvider,
   WalletProvider,
 } from "@terra-money/wallet-provider";
-import App, { AppProps } from "next/app";
+import App, { AppProps, AppContext } from "next/app";
 import { ChakraProvider, CSSReset } from "@chakra-ui/react";
 
-import Layout from "../components/Layout";
+import { Layout } from "modules/common";
 
 const MyApp = ({
   Component,
@@ -41,7 +41,7 @@ const MyApp = ({
   );
 };
 
-MyApp.getInitialProps = async (appContext) => {
+MyApp.getInitialProps = async (appContext: AppContext) => {
   const appProps = await App.getInitialProps(appContext);
   const chainOptions = await getChainOptions();
   return { ...appProps, ...chainOptions };

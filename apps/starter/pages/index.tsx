@@ -1,18 +1,21 @@
 import { useMemo } from "react";
 import { Button } from "@chakra-ui/react";
 import { MsgExecuteContract, Coin } from "@terra-money/terra.js";
-import {
-  toTerraAmount,
-  useAddress,
-  useEstimateFee,
-  useTx,
-} from "@arthuryeti/terra";
+import { num, useAddress, useEstimateFee, useTx } from "@arthuryeti/terra";
 
 export default function Web() {
   const address = useAddress();
 
   const msgs = useMemo(() => {
-    const coins = [new Coin("uusd", toTerraAmount(2))];
+    if (address == null) {
+      return;
+    }
+
+    const amount = num(2)
+      .times(10 ** 6)
+      .toNumber();
+
+    const coins = [new Coin("uusd", amount)];
 
     return [
       new MsgExecuteContract(
@@ -26,14 +29,14 @@ export default function Web() {
                   denom: "uusd",
                 },
               },
-              amount: toTerraAmount(2),
+              amount,
             },
           },
         },
-        coins
+        coins,
       ),
     ];
-  }, []);
+  }, [address]);
 
   const { fee, isLoading } = useEstimateFee({
     msgs,

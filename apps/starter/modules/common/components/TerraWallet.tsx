@@ -4,7 +4,7 @@ import {
   WalletStatus,
   useConnectedWallet,
 } from "@terra-money/wallet-provider";
-import { fromTerraAmount, useBalance } from "@arthuryeti/terra";
+import { formatAmount, useBalance } from "@arthuryeti/terra";
 import { Text, HStack, useDisclosure, Box, Button } from "@chakra-ui/react";
 
 import WalletModal from "./WalletModal";
@@ -19,8 +19,8 @@ const TerraWallet: FC = () => {
     return (
       <Box>
         <HStack spacing="3">
-          <Text variant="light">{fromTerraAmount(balance)}</Text>
-          <Text variant="light">{wallet.terraAddress}</Text>
+          <Text variant="light">{formatAmount(balance, true)}</Text>
+          <Text variant="light">{wallet?.terraAddress}</Text>
           <Button type="button" onClick={disconnect}>
             Logout
           </Button>

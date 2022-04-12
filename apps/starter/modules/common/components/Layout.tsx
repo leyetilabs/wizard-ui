@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { Box, Flex } from "@chakra-ui/react";
 import { useWallet, WalletStatus } from "@terra-money/wallet-provider";
 
-import Navbar from "./Navbar";
+import { Navbar } from "modules/common";
 
 const Layout: FC = ({ children }) => {
   const wallet = useWallet();

@@ -1,11 +1,24 @@
 {
-  "exclude": ["node_modules"],
-  "extends": "@arthuryeti/tsconfig/nextjs.json",
   "compilerOptions": {
-    "rootDir": "src",
-    "outDir": "dist",
-    "incremental": true,
-    "strict": false
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "modules/*": ["modules/*"]
+    },
+    "incremental": true
   },
-  "include": ["src", "next-env.d.ts"]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }
