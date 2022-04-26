@@ -11,11 +11,9 @@ export default function Web() {
       return;
     }
 
-    const amount = num(2)
-      .times(10 ** 6)
-      .toNumber();
+    const amount = num(2).times(10 ** 6);
 
-    const coins = [new Coin("uusd", amount)];
+    const coins = [new Coin("uusd", amount.toNumber())];
 
     return [
       new MsgExecuteContract(
@@ -29,7 +27,7 @@ export default function Web() {
                   denom: "uusd",
                 },
               },
-              amount,
+              amount: amount.toString(),
             },
           },
         },
