@@ -1,0 +1,46 @@
+{
+  "name": "@arthuryeti/terra",
+  "version": "2.2.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "license": "MIT",
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "build": "tsup src/index.tsx --format esm,cjs --dts --external react",
+    "dev": "tsup src/index.tsx --format esm,cjs --watch --dts --external react",
+    "lint": "TIMING=1 eslint src --fix",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
+  },
+  "devDependencies": {
+    "@peculiar/webcrypto": "^1.3.3",
+    "@types/lodash": "^4.14.181",
+    "@types/numeral": "^2.0.2",
+    "@types/react": "^17.0.39",
+    "@types/react-dom": "^17.0.11",
+    "@typescript-eslint/parser": "^5.18.0",
+    "eslint-import-resolver-typescript": "^2.7.1",
+    "eslint-plugin-import": "^2.26.0",
+    "rimraf": "^3.0.2",
+    "tsup": "^5.12.4",
+    "typescript": "^4.6.3"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-dom": "*",
+    "numeral": "^2.0.6",
+    "lodash": "^4.17.21",
+    "@terra-money/terra.js": "3.0.10",
+    "@terra-money/use-wallet": "^3.8.0",
+    "@terra-money/wallet-provider": "^3.8.0",
+    "bignumber.js": "^9.0.2",
+    "react-query": "^3.34.19",
+    "swr": "^1.3.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

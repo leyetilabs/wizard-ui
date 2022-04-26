@@ -1,0 +1,14 @@
+{
+  "extends": "@arthuryeti/tsconfig/react-library.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "lib": ["ES2015", "DOM"],
+    "target": "ES6",
+    "module": "ESNext",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "moduleResolution": "node"
+  },
+  "exclude": ["node_modules", "src/__test__/**/*"],
+  "include": ["src"]
+}

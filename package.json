@@ -1,0 +1,53 @@
+{
+  "name": "arthuryeti",
+  "version": "0.0.0",
+  "private": false,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --no-cache --parallel --continue",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "release": "npm run build && npx changeset publish"
+  },
+  "dependencies": {
+    "@changesets/cli": "^2.22.0"
+  },
+  "devDependencies": {
+    "prettier": "^2.6.2",
+    "turbo": "latest"
+  },
+  "turbo": {
+    "pipeline": {
+      "build": {
+        "dependsOn": [
+          "^build"
+        ],
+        "outputs": [
+          "dist/**",
+          ".next/**"
+        ]
+      },
+      "test": {
+        "dependsOn": []
+      },
+      "lint": {
+        "outputs": []
+      },
+      "dev": {
+        "cache": false
+      },
+      "clean": {
+        "cache": false
+      }
+    }
+  },
+  "engines": {
+    "npm": ">=7.0.0",
+    "node": ">=14.0.0"
+  }
+}
