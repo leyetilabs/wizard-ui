@@ -1,5 +1,16 @@
 # @arthuryeti/starter
 
+## 2.3.0
+
+### Minor Changes
+
+- Add estimateFee helper
+
+### Patch Changes
+
+- Updated dependencies
+  - @arthuryeti/terra@2.3.0
+
 ## 2.2.0
 
 ### Minor Changes
