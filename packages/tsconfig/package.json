@@ -1,6 +1,6 @@
 {
-  "name": "@arthuryeti/tsconfig",
-  "version": "1.0.0",
+  "name": "@wizard-ui/tsconfig",
+  "version": "1.0.1",
   "license": "MIT",
   "main": "index.js",
   "files": [

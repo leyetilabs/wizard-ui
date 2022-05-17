@@ -1,10 +1,14 @@
-import React, { FC } from "react";
-import { Box, Flex } from "@chakra-ui/react";
+import React from "react";
+import { Box } from "@chakra-ui/react";
 import { useWallet, WalletStatus } from "@terra-money/wallet-provider";
 
 import { Navbar } from "modules/common";
 
-const Layout: FC = ({ children }) => {
+interface Props {
+  children: React.ReactNode;
+}
+
+function Layout({ children }: Props) {
   const wallet = useWallet();
   const isInitializing = wallet.status == WalletStatus.INITIALIZING;
 
@@ -14,16 +18,12 @@ const Layout: FC = ({ children }) => {
 
   return (
     <Box>
-      {!isInitializing && (
-        <Flex direction="column" height="100%">
-          <Navbar />
-          <Box flex="1" p="4">
-            {children}
-          </Box>
-        </Flex>
-      )}
+      <Navbar />
+      <Box flex="1" p="4">
+        {children}
+      </Box>
     </Box>
   );
-};
+}
 
 export default Layout;

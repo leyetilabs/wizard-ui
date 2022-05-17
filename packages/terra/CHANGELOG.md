@@ -1,5 +1,24 @@
 # @arthuryeti/terra
 
+## 2.0.0
+
+### Minor Changes
+
+- Add types
+
+### Patch Changes
+
+- Updated dependencies
+  - @wizard-ui/react@1.1.0
+
+## 1.0.1
+
+### Patch Changes
+
+- Best version of the library so far
+- Updated dependencies
+  - @wizard-ui/react@1.0.1
+
 ## 2.3.0
 
 ### Minor Changes
