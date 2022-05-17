@@ -1,0 +1,50 @@
+# AmountInput
+
+Component to input amount. Beautiful formating so it's easy for your user to input amount.
+
+```ts
+import { AmountInput } from "@wizard-ui/react";
+```
+
+## Usage
+
+```tsx
+import { useState } from "react";
+import { AmountInput } from "@wizard-ui/react";
+
+function App() {
+  const [value, setValue] = useState("");
+
+  return <AmountInput value={value} onChange={setValue} />;
+}
+```
+
+### label (optional)
+
+You can specify a max. Useful to avoid issues.
+
+```tsx
+import { useState } from "react";
+import { AmountInput } from "@wizard-ui/react";
+
+function App() {
+  const [value, setValue] = useState("");
+
+  return <AmountInput label="Amount" value={value} onChange={setValue} />;
+}
+```
+
+### max (optional)
+
+You can specify a max. Useful to avoid issues.
+
+```tsx
+import { useState } from "react";
+import { AmountInput } from "@wizard-ui/react";
+
+function App() {
+  const [value, setValue] = useState("");
+
+  return <AmountInput value={value} onChange={setValue} max="100" />;
+}
+```

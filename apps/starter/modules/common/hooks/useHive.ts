@@ -1,6 +1,6 @@
 import { useConnectedWallet } from "@terra-money/wallet-provider";
 import { request } from "graphql-request";
-import useSwr from "swr";
+import { useQuery } from "react-query";
 
 type Params = {
   name: string | string[];
@@ -20,7 +20,7 @@ export const useHive = ({ name, query, variables, options }: Params) => {
     GRAPHQL = "https://testnet-hive.terra.dev/graphql";
   }
 
-  const { data } = useSwr(
+  const { data } = useQuery(
     name,
     () => {
       return request(GRAPHQL, query, variables);

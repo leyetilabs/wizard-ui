@@ -1,5 +1,11 @@
 # @arthuryeti/tsconfig
 
+## 1.0.1
+
+### Patch Changes
+
+- Best version of the library so far
+
 ## 1.0.0
 
 ### Major Changes

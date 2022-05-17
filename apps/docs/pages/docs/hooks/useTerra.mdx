@@ -1,0 +1,60 @@
+# useTerra
+
+Hook for submit transaction.
+
+```ts
+import { useTerra } from "@wizard-ui/terra";
+```
+
+## Usage
+
+```tsx
+import { Button } from "@chakra-ui/react";
+import { useAddress, useTerra } from "@wizard-ui/terra";
+
+function App() {
+  const address = useAddress();
+  const { tx } = useTerra();
+
+  const handleClick = () => {
+    const amount = num(0.5).times(10 ** 6);
+    const coins = [new Coin("uluna", amount.toNumber())];
+
+    const msgs = [
+      new MsgExecuteContract(
+        address,
+        "terra1udsua9w6jljwxwgwsegvt6v657rg3ayfvemupnes7lrggd28s0wq7g8azm",
+        {
+          swap: {
+            max_spread: "0.1",
+            offer_asset: {
+              info: { native_token: { denom: "uluna" } },
+              amount: amount.toString(),
+            },
+            belief_price: "0.005899736340782930",
+          },
+        },
+        coins
+      ),
+    ];
+
+    tx.submit({ msgs });
+  };
+
+  return (
+    <div>
+      <Button type="button" onClick={handleClick}>
+        Submit tx
+      </Button>
+    </div>
+  );
+}
+```
+
+## Return Value
+
+```tsx
+{
+  tx: Tx,
+}
+```

@@ -1,0 +1,25 @@
+# useAddress
+
+Hook for fetching the connected wallet address.
+
+```ts
+import { useAddress } from "@wizard-ui/terra";
+```
+
+## Usage
+
+```tsx
+import { useAddress } from "@wizard-ui/terra";
+
+function App() {
+  const address = useAddress();
+
+  return <div>Wallet Address: {address}</div>;
+}
+```
+
+## Return Value
+
+```tsx
+string | null;
+```

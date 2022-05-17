@@ -1,5 +1,13 @@
 # @arthuryeti/terra
 
+## 1.0.1
+
+### Patch Changes
+
+- Best version of the library so far
+- Updated dependencies
+  - @wizard-ui/react@1.0.1
+
 ## 2.3.0
 
 ### Minor Changes
