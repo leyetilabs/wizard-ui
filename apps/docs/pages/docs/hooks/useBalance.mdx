@@ -1,0 +1,42 @@
+# useBalance
+
+Hook for fetching balance for Luna or CW-20 tokens.
+
+```ts
+import { useBalance } from "@wizard-ui/terra";
+```
+
+## Usage
+
+```tsx
+import { useBalance } from "@wizard-ui/terra";
+
+function App() {
+  const balance = useBalance("uluna");
+
+  return <div>Balance: {balance}</div>;
+}
+```
+
+## Return Value
+
+```tsx
+string | null;
+```
+
+## Configuration
+
+### Specity address
+
+Address to fetch balance for. If `address` is not defined, hook will use the connected wallet address.
+
+```tsx {5}
+import { useBalance } from "@wizard-ui/terra";
+
+function App() {
+  const balance = useBalance(
+    "uluna", // native or cw20
+    "terra1vdg4c25t53sqjdfq0tz32g75rlvng5mdz8rk0g" // custom address
+  );
+}
+```

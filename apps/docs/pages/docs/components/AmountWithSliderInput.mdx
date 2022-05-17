@@ -1,0 +1,40 @@
+# AmountWithSliderInput
+
+Component to input amount. Beautiful formating so it's easy for your user to input amount.
+
+```ts
+import { AmountWithSliderInput } from "@wizard-ui/react";
+```
+
+## Usage
+
+```tsx
+import { useState } from "react";
+import { AmountWithSliderInput } from "@wizard-ui/react";
+
+function App() {
+  const [value, setValue] = useState("");
+
+  return <AmountWithSliderInput max="6" value={value} onChange={setValue} />;
+}
+```
+
+### label (optional)
+
+```tsx
+import { useState } from "react";
+import { AmountWithSliderInput } from "@wizard-ui/react";
+
+function App() {
+  const [value, setValue] = useState("");
+
+  return (
+    <AmountWithSliderInput
+      label="Amount"
+      max="6"
+      value={value}
+      onChange={setValue}
+    />
+  );
+}
+```

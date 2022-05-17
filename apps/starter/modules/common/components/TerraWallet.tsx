@@ -1,29 +1,44 @@
 import React, { FC } from "react";
+import { useWallet, WalletStatus } from "@terra-money/wallet-provider";
+import { truncate } from "@wizard-ui/react";
+import { useAddress } from "@wizard-ui/terra";
 import {
-  useWallet,
-  WalletStatus,
-  useConnectedWallet,
-} from "@terra-money/wallet-provider";
-import { formatAmount, useBalance } from "@arthuryeti/terra";
-import { Text, HStack, useDisclosure, Box, Button } from "@chakra-ui/react";
+  HStack,
+  useDisclosure,
+  Box,
+  IconButton,
+  Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+} from "@chakra-ui/react";
+import { ChevronDown as ChevronDownIcon, Bell as BellIcon } from "lucide-react";
 
-import WalletModal from "./WalletModal";
+import ConnectWalletModal from "./ConnectWalletModal";
 
 const TerraWallet: FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { status, disconnect } = useWallet();
-  const wallet = useConnectedWallet();
-  const balance = useBalance("uusd");
+  const address = useAddress();
 
-  if (status === WalletStatus.WALLET_CONNECTED) {
+  if (status === WalletStatus.WALLET_CONNECTED && address != null) {
     return (
       <Box>
         <HStack spacing="3">
-          <Text variant="light">{formatAmount(balance, true)}</Text>
-          <Text variant="light">{wallet?.terraAddress}</Text>
-          <Button type="button" onClick={disconnect}>
-            Logout
-          </Button>
+          <IconButton
+            aria-label="notifications"
+            icon={<BellIcon size="1rem" />}
+          />
+          <Menu placement="bottom-end">
+            <MenuButton as={Button} rightIcon={<ChevronDownIcon size="1rem" />}>
+              {truncate(address)}
+            </MenuButton>
+            <MenuList>
+              <MenuItem>Copy Address</MenuItem>
+              <MenuItem onClick={disconnect}>Disconnect</MenuItem>
+            </MenuList>
+          </Menu>
         </HStack>
       </Box>
     );
@@ -32,9 +47,9 @@ const TerraWallet: FC = () => {
   return (
     <>
       <Button type="button" onClick={onOpen}>
-        Connect your wallet
+        Connect wallet
       </Button>
-      <WalletModal isOpen={isOpen} onClose={onClose} />
+      <ConnectWalletModal isOpen={isOpen} onClose={onClose} />
     </>
   );
 };

@@ -1,6 +1,7 @@
 import { Coins } from "@terra-money/terra.js";
 import { useLCDClient } from "@terra-money/wallet-provider";
-import useSWR from "swr";
+import BigNumber from "bignumber.js";
+import { useQuery } from "react-query";
 
 import { useAddress } from "../hooks/useAddress";
 import { BalanceResponse } from "../types";
@@ -20,37 +21,31 @@ function isBalanceResponse(
 export const useBalance = (
   token: string,
   contractAddress?: string
-): string | null => {
+): BigNumber.Value | null => {
   const client = useLCDClient();
   const terraAddress = useAddress();
   const address = contractAddress ?? terraAddress;
 
   // TODO: Fix type to have Coins and Balance
-  const { data, error } = useSWR(
-    ["balance", token, address],
-    () => {
-      if (address == null) {
-        throw new Error("Error in fetching balance");
-      }
-
-      // TODO: isNativeToken function
-      if (token.startsWith("u")) {
-        return client.bank.balance(address);
-      }
-
-      return client.wasm.contractQuery(token, {
-        balance: {
-          address,
-        },
-      });
-    },
-    {
-      revalidateOnMount: true,
+  const { data, error } = useQuery(["balance", token, address], () => {
+    if (address == null) {
+      throw new Error("Error in fetching balance");
     }
-  );
+
+    // TODO: isNativeToken function
+    if (token.startsWith("u")) {
+      return client.bank.balance(address);
+    }
+
+    return client.wasm.contractQuery(token, {
+      balance: {
+        address,
+      },
+    });
+  });
 
   if (!error && !data) {
-    return "0";
+    return null;
   }
 
   if (data == null) {

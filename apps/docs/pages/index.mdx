@@ -1,0 +1,102 @@
+---
+title: "Wizard UI: React Components and Hooks for Terra"
+---
+
+import { Header } from "../components/docs";
+
+<Header />
+
+**Wizard UI** is a collection of React Components and Hooks to start working on Terra. So you can focus on the fun stuff and start shipping cool asss dApps.
+
+<div className="mt-16 mb-4 text-center">
+  `npm i @wizard-ui/react @wizard-ui/terra`
+</div>
+
+<div className="mb-20 text-center">[Get Started](/docs/getting-started)</div>
+
+## Overview
+
+```tsx
+import { WalletProvider } from "@terra-money/wallet-provider";
+import { ChakraProvider } from "@chakra-ui/react";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { theme } from "@wizard-ui/react";
+import { TerraProvider } from "@wizard-ui/terra";
+
+const queryClient = new QueryClient();
+
+function App() {
+  return (
+    <WalletProvider
+      defaultNetwork={defaultNetwork}
+      walletConnectChainIds={walletConnectChainIds}
+    >
+      <QueryClientProvider client={queryClient}>
+        <ChakraProvider theme={theme}>
+          <TerraProvider>
+            <Component />
+          </TerraProvider>
+        </ChakraProvider>
+      </QueryClientProvider>
+    </WalletProvider>
+  );
+}
+```
+
+```tsx
+import { MsgExecuteContract, Coin } from "@terra-money/terra.js";
+import { useAddress, useTerra } from "@wizard-ui/terra";
+
+function Form() {
+  const address = useAddress();
+  const { tx } = useTerra();
+
+  const handleClick = () => {
+    const amount = 1000000;
+
+    // Msgs to sign
+    const msgs = [
+      new MsgExecuteContract(
+        address,
+        "terra1hzh9vpxhsk8253se0vv5jj6etdvxu3nv8z07zu",
+        {
+          send: {
+            msg: "eyJyZWRlZW1fc3RhYmxlIjp7fX0=",
+            amount: amount.toString(),
+            contract: "terra1sepfj7s0aeg5967uxnfk4thzlerrsktkpelm5s",
+          },
+        },
+        [new Coin("uusd", amount)]
+      ),
+    ];
+
+    tx.submit({ msgs });
+  };
+
+  return (
+    <button type="button" onClick={handleClick}>
+      Submit tx
+    </button>
+  );
+}
+```
+
+This is how you broadcast a transaction on Terra Station.
+
+## Features
+
+**Wizard UI** supports all these features out-of-the-box:
+
+- 5+ react components for providing liquidity, staking, swaping, dashboard, etc...
+- 5+ hooks for working with wallets, contracts, transactions, signing, etc.
+- Caching, request deduplication, and persistence
+- TypeScript ready
+
+...and a lot more.
+
+## Community
+
+Check out the following places for more wizard-related content:
+
+- Follow **[@arthuryeti](https://twitter.com/arthuryeti)** and **[@leyetilabs](https://twitter.com/leyetilabs)** on Twitter for project updates
+- Join the [discussions on GitHub](https://github.com/leyetilabs/wizard-ui/dscussions)

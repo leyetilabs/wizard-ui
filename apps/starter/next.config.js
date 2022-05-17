@@ -1,7 +1,7 @@
 module.exports = {
   reactStrictMode: true,
   experimental: {
-    esmExternals: false,
+    esmExternals: "loose",
   },
   webpack: function (config) {
     config.experiments = { asyncWebAssembly: true, syncWebAssembly: true };
