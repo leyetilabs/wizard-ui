@@ -1,5 +1,16 @@
 # @arthuryeti/terra
 
+## 3.0.0
+
+### Minor Changes
+
+- New deps
+
+### Patch Changes
+
+- Updated dependencies
+  - @wizard-ui/react@1.2.0
+
 ## 2.0.0
 
 ### Minor Changes

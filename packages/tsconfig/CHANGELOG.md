@@ -1,5 +1,11 @@
 # @arthuryeti/tsconfig
 
+## 1.1.0
+
+### Minor Changes
+
+- New deps
+
 ## 1.0.1
 
 ### Patch Changes
