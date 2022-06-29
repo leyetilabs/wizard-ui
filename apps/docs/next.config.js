@@ -12,8 +12,7 @@ const withNextra = require("nextra")({
 const config = {
   reactStrictMode: true,
   experimental: {
-    externalDir: true,
-    // esmExternals: "loose",
+    esmExternals: "loose",
   },
   webpack: function (config) {
     config.experiments = { asyncWebAssembly: true, syncWebAssembly: true };

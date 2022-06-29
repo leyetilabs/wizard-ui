@@ -1,4 +1,10 @@
-module.exports = {
+const withTM = require("next-transpile-modules")([
+  "@wizard-ui/react",
+  "@wizard-ui/terra",
+]);
+
+/** @type {import('next').NextConfig} */
+const config = {
   reactStrictMode: true,
   experimental: {
     esmExternals: "loose",
@@ -8,3 +14,5 @@ module.exports = {
     return config;
   },
 };
+
+module.exports = withTM(config);
