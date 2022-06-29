@@ -2,8 +2,7 @@
 
 <br>
 
-Wizard UI provides a set of reusable React
-components and hooks that make it super easy to create Terra dApps.
+Wizard UI provides a set of reusable React components and hooks that make it super easy to create Terra dApps.
 
 ## Looking for the documentation? 📝
 
