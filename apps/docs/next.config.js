@@ -1,3 +1,8 @@
+const withTM = require("next-transpile-modules")([
+  "@wizard-ui/react",
+  "@wizard-ui/terra",
+]);
+
 const withNextra = require("nextra")({
   theme: "nextra-theme-docs",
   themeConfig: "./theme.config.js",
@@ -7,7 +12,8 @@ const withNextra = require("nextra")({
 const config = {
   reactStrictMode: true,
   experimental: {
-    esmExternals: "loose",
+    externalDir: true,
+    // esmExternals: "loose",
   },
   webpack: function (config) {
     config.experiments = { asyncWebAssembly: true, syncWebAssembly: true };
@@ -15,4 +21,4 @@ const config = {
   },
 };
 
-module.exports = withNextra(config);
+module.exports = withNextra(withTM(config));
