@@ -1,5 +1,5 @@
 import BigNumber from "bignumber.js";
-import { format as d3Format } from "d3-format";
+import { format } from "d3-format";
 
 BigNumber.config({
   ROUNDING_MODE: BigNumber.ROUND_DOWN,
@@ -44,7 +44,7 @@ export function formatAmount(
     ? valOrZero.div(10 ** 6)
     : valOrZero;
 
-  return d3Format(
+  return format(
     options?.formatSpecifier ?? NumberFormatSpecifier.DEFAULT_FLOAT
   )(valToFormat.toNumber());
 }

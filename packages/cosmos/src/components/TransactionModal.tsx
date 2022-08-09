@@ -23,20 +23,18 @@ import {
 import { Tx, TxState } from "../types";
 
 const TITLES: Record<string, string> = {
-  estimating: "Estimating fees",
-  posting: "Waiting for Terra Station...",
-  postError: "User Denied",
-  broadcasting: "Waiting for Terra Station...",
+  posting: "Waiting for Keplr...",
+  postError: "Error",
+  broadcasting: "Waiting for Keplr...",
   broadcastSuccess: "Your transaction is complete",
   broadcastError: "Something went wrong",
 };
 
 const SUB_TITLES: Record<string, string> = {
-  estimating:
-    "Terra Station is estimating the fees for this transaction. Please wait.",
   postError:
     "Either you denied the transaction or the transaction failed. Please try again.",
-  posting: "You should accept the transaction on Terra Station.",
+  posting:
+    "Your transaction will be broadcasted as soon as you hit Approve on Keplr.",
   broadcasting:
     "Transaction broadcasted. There is no need to send another until it has been complete.",
   broadcastSuccess:
@@ -105,15 +103,6 @@ interface TransactionModalStepsProps {
 function TransactionModalSteps({ state }: TransactionModalStepsProps) {
   return (
     <HStack spacing={2}>
-      <TransactionModalStepsItem
-        isPending={["estimating"].includes(state.txStep)}
-        isActive={[
-          "posting",
-          "broadcasting",
-          "broadcastSuccess",
-          "broadcastError",
-        ].includes(state.txStep)}
-      />
       <TransactionModalStepsItem
         isPending={["posting"].includes(state.txStep)}
         isActive={[

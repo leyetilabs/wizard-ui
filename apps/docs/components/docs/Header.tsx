@@ -13,7 +13,7 @@ export function Header() {
         </span>
       </h1>
 
-      <div className="flex flex-wrap gap-2 justify-center max-w-[28rem] min-h-[3rem]">
+      {/* <div className="flex flex-wrap gap-2 justify-center max-w-[28rem] min-h-[3rem]">
         <a
           aria-label="Version"
           href="https://www.npmjs.com/package/@wizard-ui/react"
@@ -57,7 +57,7 @@ export function Header() {
             src="https://img.shields.io/github/stars/leyetilabs/terra?colorA=2B323B&colorB=1e2329&style=flat&label=Stars"
           />
         </a>
-      </div>
+      </div> */}
     </header>
   );
 }
