@@ -1,5 +1,16 @@
 # @arthuryeti/terra
 
+## 2.0.0
+
+### Major Changes
+
+- Huge change to support cosmos
+
+### Patch Changes
+
+- Updated dependencies
+  - @wizard-ui/core@1.0.0
+
 ## 1.2.0
 
 ### Minor Changes

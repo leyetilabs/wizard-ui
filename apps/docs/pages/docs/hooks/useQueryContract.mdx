@@ -1,0 +1,52 @@
+---
+title: "useQueryContract"
+description: "React Hook for querying a CosmWasm contract."
+---
+
+# useQueryContract
+
+React Hook for querying a CosmWasm contract.
+
+```ts
+import { useQueryContract } from "@wizard-ui/react";
+```
+
+## Usage
+
+```tsx
+import { useQueryContract } from "@wizard-ui/react";
+
+function App() {
+  const { data, isLoading, isError } = useQueryContract({
+    address: "osmo12z0kqd9y28znzjk7pa8e0646nmhrctxnw0nj7265hzgazzml7uuqe88thx",
+    msg: {
+      token_info: {},
+    },
+  });
+
+  if (isLoading) return <div>Fetching contract...</div>;
+  if (isError) return <div>Error fetching contract</div>;
+  return <div>Token name: {data.name}</div>;
+}
+```
+
+## Return Value
+
+```tsx
+{
+  data?: string
+  error?: Error
+  isIdle: boolean
+  isLoading: boolean
+  isFetching: boolean
+  isSuccess: boolean
+  isError: boolean
+  isFetched: boolean
+  isRefetching: boolean
+  refetch: (options: {
+    throwOnError: boolean
+    cancelRefetch: boolean
+  }) => Promise<string>
+  status: 'idle' | 'error' | 'loading' | 'success'
+}
+```

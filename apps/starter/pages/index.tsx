@@ -1,28 +1,53 @@
 import { useState } from "react";
 import { Button, Box, Text, SimpleGrid } from "@chakra-ui/react";
 import { NumberFormatSpecifier, formatAmount } from "@wizard-ui/core";
-import { AmountWithSliderInput, AmountInput } from "@wizard-ui/react";
+import { toUtf8 } from "@cosmjs/encoding";
+import { MsgExecuteContract } from "cosmjs-types/cosmwasm/wasm/v1/tx";
+import {
+  AmountWithSliderInput,
+  AmountInput,
+  useWallet,
+} from "@wizard-ui/react";
 
 import { MinimalLineChart, Stat } from "modules/common";
 
 export default function Web() {
-  // const { tx } = useCosmos();
+  const { address, sendTransaction } = useWallet();
+  const [isLoading, setIsLoading] = useState(false);
   const [vaultValue, setVaultValue] = useState(1.23);
   const [amount, setAmount] = useState("");
   const [amount1, setAmount1] = useState("");
   const [amount2, setAmount2] = useState("");
 
-  const handleClick = () => {
-    // tx.submit({
-    //   contractAddress:
-    //     "terra1lm7d4zr97rzp3a22szdv6ucpeyckyl2l2wh6jc9qrga78eyrvamsjgs5q6",
-    //   msg: {
-    //     bond: {
-    //       amount: "500000",
-    //     },
-    //   },
-    //   funds: [coin("500000", "uluna")],
-    // });
+  const handleClick = async () => {
+    setIsLoading(true);
+    const messages = [
+      {
+        typeUrl: "/cosmwasm.wasm.v1.MsgExecuteContract",
+        value: MsgExecuteContract.fromPartial({
+          sender: address,
+          contract:
+            "osmo12z0kqd9y28znzjk7pa8e0646nmhrctxnw0nj7265hzgazzml7uuqe88thx",
+          msg: toUtf8(
+            JSON.stringify({
+              increase_allowance: {
+                spender:
+                  "osmo1wp2tmuuln0dvt7dtlgus06r2skt04esurfcz605ummrqga7ae5uqhuegt2",
+                amount: "1000",
+              },
+            }),
+          ),
+        }),
+      },
+    ];
+
+    await sendTransaction({
+      signerAddress: address,
+      messages,
+      fee: "auto",
+    });
+
+    setIsLoading(false);
   };
 
   return (
@@ -58,6 +83,7 @@ export default function Web() {
           colorScheme="teal"
           onClick={handleClick}
           width="full"
+          isLoading={isLoading}
         >
           Submit tx
         </Button>

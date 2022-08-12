@@ -18,9 +18,9 @@ import ConnectWalletModal from "./ConnectWalletModal";
 
 export const CosmosWallet: FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { publicKey, wallet } = useWallet();
+  const { address } = useWallet();
 
-  if (publicKey != null) {
+  if (address != null) {
     return (
       <Box>
         <HStack spacing="3">
@@ -30,7 +30,7 @@ export const CosmosWallet: FC = () => {
           />
           <Menu placement="bottom-end">
             <MenuButton as={Button} rightIcon={<ChevronDownIcon size="1rem" />}>
-              {truncate(publicKey)}
+              {truncate(address)}
             </MenuButton>
             <MenuList>
               <MenuItem>Copy Address</MenuItem>

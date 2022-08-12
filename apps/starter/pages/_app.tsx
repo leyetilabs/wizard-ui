@@ -1,10 +1,10 @@
 import React, { useMemo } from "react";
 import { AppProps } from "next/app";
 import { ChakraProvider, CSSReset } from "@chakra-ui/react";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { KeplrWalletAdapter } from "@wizard-ui/core";
 import {
-  ConnectionProvider,
+  CWClientProvider,
   WalletProvider,
   WalletModalProvider,
 } from "@wizard-ui/react";
@@ -23,20 +23,10 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     [endpoint, chainId],
   );
 
-  // return (
-  //   <QueryClientProvider client={queryClient}>
-  //     <ChakraProvider theme={theme}>
-  //       <CSSReset />
-  //       <Layout>
-  //         <Component {...pageProps} />
-  //       </Layout>
-  //     </ChakraProvider>
-  //   </QueryClientProvider>
-  // );
   return (
     <ChakraProvider theme={theme}>
-      <ConnectionProvider endpoint={endpoint}>
-        <WalletProvider wallets={wallets} chainId={chainId} autoConnect>
+      <CWClientProvider endpoint={endpoint}>
+        <WalletProvider wallets={wallets} chainId={chainId}>
           <WalletModalProvider>
             <QueryClientProvider client={queryClient}>
               <CSSReset />
@@ -46,7 +36,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
             </QueryClientProvider>
           </WalletModalProvider>
         </WalletProvider>
-      </ConnectionProvider>
+      </CWClientProvider>
     </ChakraProvider>
   );
 };

@@ -1,49 +1,34 @@
+import { EncodeObject } from "@cosmjs/proto-signing";
+import { StdFee } from "@cosmjs/stargate";
+
 import type { WalletAdapter } from "./base";
 import { BaseWalletAdapter } from "./base";
-import {
-  WalletSendTransactionError,
-  WalletSignTransactionError,
-} from "./errors";
 
 export abstract class BaseSignerWalletAdapter
   extends BaseWalletAdapter
   implements WalletAdapter
 {
-  async sendTransaction(
-    transaction: any,
-    connection: any,
-    options: any = {}
-  ): Promise<any> {
-    let emit = true;
-    try {
-      try {
-        transaction = {};
+  abstract sendTransaction({
+    signerAddress,
+    messages,
+    fee,
+    memo,
+  }: {
+    signerAddress: string;
+    messages: EncodeObject[];
+    fee: number | StdFee | "auto";
+    memo?: string;
+  }): Promise<any>;
 
-        const { signers, ...sendOptions } = options;
-        signers?.length && transaction.partialSign(...signers);
-
-        transaction = await this.signTransaction(transaction);
-
-        const rawTransaction = transaction.serialize();
-
-        return await connection.sendRawTransaction(rawTransaction, sendOptions);
-      } catch (error: any) {
-        // If the error was thrown by `signTransaction`, rethrow it and don't emit a duplicate event
-        if (error instanceof WalletSignTransactionError) {
-          emit = false;
-          throw error;
-        }
-        throw new WalletSendTransactionError(error?.message, error);
-      }
-    } catch (error: any) {
-      if (emit) {
-        this.emit("error", error);
-      }
-      throw error;
-    }
-  }
-
-  abstract signTransaction(transaction: any): Promise<any>;
+  abstract signTransaction({
+    signerAddress,
+    messages,
+    fee,
+    memo,
+  }: {
+    signerAddress: string;
+    messages: EncodeObject[];
+    fee: StdFee;
+    memo: string;
+  }): Promise<any>;
 }
-
-export abstract class BaseMessageSignerWalletAdapter extends BaseSignerWalletAdapter {}

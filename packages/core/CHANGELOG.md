@@ -1,5 +1,11 @@
 # @arthuryeti/terra
 
+## 1.0.0
+
+### Major Changes
+
+- Huge change to support cosmos
+
 ## 1.1.0
 
 ### Minor Changes

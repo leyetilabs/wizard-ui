@@ -4,6 +4,9 @@ import type {
   WalletName,
   WalletReadyState,
 } from "@wizard-ui/core";
+import { EncodeObject } from "@cosmjs/proto-signing";
+import { StdFee } from "@cosmjs/stargate";
+import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 
 export interface Wallet {
   adapter: any;
@@ -14,7 +17,8 @@ export interface WalletContextState {
   autoConnect: boolean;
   wallets: Wallet[];
   wallet: Wallet | null;
-  publicKey: any | null;
+  client: SigningCosmWasmClient | null;
+  address: any | null;
   connecting: boolean;
   connected: boolean;
   disconnecting: boolean;
@@ -22,13 +26,8 @@ export interface WalletContextState {
   select(walletName: WalletName): void;
   connect(): Promise<void>;
   disconnect(): Promise<void>;
-  sendTransaction(
-    transaction: any,
-    connection: any,
-    options?: any
-  ): Promise<any>;
-
-  signTransaction: BaseSignerWalletAdapter["signTransaction"] | undefined;
+  sendTransaction: BaseSignerWalletAdapter["sendTransaction"];
+  signTransaction: BaseSignerWalletAdapter["signTransaction"];
 }
 
 const EMPTY_ARRAY: ReadonlyArray<never> = [];
@@ -51,14 +50,34 @@ const DEFAULT_CONTEXT = {
       console.error(constructMissingProviderErrorMessage("get", "disconnect"))
     );
   },
-  sendTransaction(_transaction: any, _connection: any, _options?: any) {
+  sendTransaction({
+    signerAddress,
+    messages,
+    fee,
+    memo,
+  }: {
+    signerAddress: string;
+    messages: EncodeObject[];
+    fee: number | StdFee | "auto";
+    memo?: string;
+  }) {
     return Promise.reject(
       console.error(
         constructMissingProviderErrorMessage("get", "sendTransaction")
       )
     );
   },
-  signTransaction(_transaction: any) {
+  signTransaction({
+    signerAddress,
+    messages,
+    fee,
+    memo,
+  }: {
+    signerAddress: string;
+    messages: EncodeObject[];
+    fee: StdFee;
+    memo: string;
+  }) {
     return Promise.reject(
       console.error(
         constructMissingProviderErrorMessage("get", "signTransaction")
@@ -66,6 +85,7 @@ const DEFAULT_CONTEXT = {
     );
   },
 } as WalletContextState;
+
 Object.defineProperty(DEFAULT_CONTEXT, "wallets", {
   get() {
     console.error(constructMissingProviderErrorMessage("read", "wallets"));
@@ -78,9 +98,15 @@ Object.defineProperty(DEFAULT_CONTEXT, "wallet", {
     return null;
   },
 });
-Object.defineProperty(DEFAULT_CONTEXT, "publicKey", {
+Object.defineProperty(DEFAULT_CONTEXT, "client", {
   get() {
-    console.error(constructMissingProviderErrorMessage("read", "publicKey"));
+    console.error(constructMissingProviderErrorMessage("read", "client"));
+    return null;
+  },
+});
+Object.defineProperty(DEFAULT_CONTEXT, "address", {
+  get() {
+    console.error(constructMissingProviderErrorMessage("read", "address"));
     return null;
   },
 });

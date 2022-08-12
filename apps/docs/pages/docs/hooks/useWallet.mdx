@@ -1,0 +1,47 @@
+---
+title: "useWallet"
+description: "React Hook for executing a message against a CosmWasm contract."
+---
+
+# useWallet
+
+React Hook for executing a message against a CosmWasm contract.
+
+```ts
+import { useWallet } from "@wizard-ui/react";
+```
+
+## Usage
+
+```tsx
+import { useWallet } from "@wizard-ui/react";
+
+function App() {
+  const { address } = useWallet();
+
+  if (address == null) {
+    return <div>Not connected</div>;
+  }
+
+  return <div>Connected with {address}</div>;
+}
+```
+
+## Return Value
+
+```tsx
+{
+  autoConnect: boolean;
+  wallets: Wallet[];
+  wallet: Wallet | null;
+  client: SigningCosmWasmClient | null;
+  address: any | null;
+  connecting: boolean;
+  connected: boolean;
+
+  select(walletName: WalletName): void;
+  connect(): Promise<void>;
+  sendTransaction: BaseSignerWalletAdapter["sendTransaction"];
+  signTransaction: BaseSignerWalletAdapter["signTransaction"];
+}
+```

@@ -1,12 +1,11 @@
 import EventEmitter from "eventemitter3";
 
 import type { WalletError } from "./errors";
-import { WalletNotConnectedError } from "./errors";
 
 export { EventEmitter };
 
 export interface WalletAdapterEvents {
-  connect(publicKey: any): void;
+  connect(address: any): void;
   disconnect(): void;
   error(error: WalletError): void;
   readyStateChange(readyState: WalletReadyState): void;
@@ -27,17 +26,12 @@ export interface WalletAdapterProps<Name extends string = string> {
   url: string;
   icon: string;
   readyState: WalletReadyState;
-  publicKey: any | null;
+  address: any | null;
   connecting: boolean;
   connected: boolean;
 
   connect(): Promise<void>;
   disconnect(): Promise<void>;
-  sendTransaction(
-    transaction: any,
-    connection: any,
-    options?: any
-  ): Promise<any>;
 }
 
 export type WalletAdapter<Name extends string = string> =
@@ -80,20 +74,15 @@ export abstract class BaseWalletAdapter
   abstract url: string;
   abstract icon: string;
   abstract readyState: WalletReadyState;
-  abstract publicKey: any | null;
+  abstract address: any | null;
   abstract connecting: boolean;
 
   get connected(): boolean {
-    return !!this.publicKey;
+    return !!this.address;
   }
 
   abstract connect(): Promise<void>;
   abstract disconnect(): Promise<void>;
-  abstract sendTransaction(
-    transaction: any,
-    connection: any,
-    options?: any
-  ): Promise<any>;
 }
 
 export function scopePollingDetectionStrategy(detect: () => boolean): void {

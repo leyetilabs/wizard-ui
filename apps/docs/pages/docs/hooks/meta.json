@@ -1,5 +1,6 @@
 {
-  "useAddress": "useAddress",
   "useBalance": "useBalance",
-  "useTerra": "useTerra"
+  "useExecuteContract": "useExecuteContract",
+  "useQueryContract": "useQueryContract",
+  "useWallet": "useWallet"
 }

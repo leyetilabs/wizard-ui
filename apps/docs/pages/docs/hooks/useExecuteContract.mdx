@@ -1,0 +1,62 @@
+---
+title: "useExecuteContract"
+description: "React Hook for executing a message against a CosmWasm contract."
+---
+
+# useExecuteContract
+
+React Hook for executing a message against a CosmWasm contract.
+
+```tsx
+import { useExecuteContract } from "@wizard-ui/react";
+```
+
+## Usage
+
+```tsx
+import { useExecuteContract } from "@wizard-ui/react";
+
+function App() {
+  const { mutate } = useExecuteContract({
+    // contract address
+    address: "osmo12z0kqd9y28znzjk7pa8e0646nmhrctxnw0nj7265hzgazzml7uuqe88thx",
+  });
+
+  const handleClick = () => {
+    mutate({
+      // message to execute
+      msg: {
+        increase_allowance: {
+          spender:
+            "osmo1wp2tmuuln0dvt7dtlgus06r2skt04esurfcz605ummrqga7ae5uqhuegt2",
+          amount: "1000",
+        },
+      },
+    });
+  };
+
+  return (
+    <button type="button" onClick={handleClick}>
+      Submit tx
+    </button>
+  );
+}
+```
+
+## Return Value
+
+```tsx
+{
+  mutate: ({msg: Record<string, unknown>}) => Promise<any>
+  mutateAsync: ({msg: Record<string, unknown>}) => Promise<any>
+  data?: any
+  error?: Error
+  isError: boolean
+  isIdle: boolean
+  isLoading: boolean
+  isPaused: boolean
+  isSuccess: boolean
+  reset: () => Promise<any>
+  status: 'idle' | 'error' | 'loading' | 'success'
+}
+```

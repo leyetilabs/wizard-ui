@@ -2,55 +2,55 @@ import Callout from "nextra-theme-docs/callout";
 
 # Getting Started
 
-Wizard UI depends on Chakra UI, React Query, @terra-money/wallet-provider and @terra-money/terra.js.
+Wizard UI depends on Chakra UI, React Query and @cosmjs.
 
 ## Installation
 
 Install Wizard UI and make sure you install its peer dependencies. It should be done automaticaly with npm v7.
 
 ```plaintext
-npm install @wizard-ui/terra
+npm install @wizard-ui/core @wizard-ui/react
 ```
 
 ## Quick Start
 
-First, add the `TerraProvider` to your app.
+First, add the `ConnectionProvider`, `WalletProvider` and `WalletModalProvider` to your app.
 
 ```tsx {4,5,17,19}
-import { WalletProvider } from "@terra-money/wallet-provider";
 import { ChakraProvider } from "@chakra-ui/react";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { theme } from "@wizard-ui/react";
-import { TerraProvider } from "@wizard-ui/terra";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  ConnectionProvider,
+  WalletProvider,
+  WalletModalProvider,
+  theme,
+} from "@wizard-ui/react";
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
-    <WalletProvider
-      defaultNetwork={defaultNetwork}
-      walletConnectChainIds={walletConnectChainIds}
-    >
-      <QueryClientProvider client={queryClient}>
-        <ChakraProvider theme={theme}>
-          <TerraProvider>
+    <ChakraProvider theme={theme}>
+      <ConnectionProvider endpoint={endpoint}>
+        <WalletProvider wallets={wallets} chainId={chainId}>
+          <WalletModalProvider>
             <Component />
-          </TerraProvider>
-        </ChakraProvider>
-      </QueryClientProvider>
-    </WalletProvider>
+          </WalletModalProvider>
+        </WalletProvider>
+      </ConnectionProvider>
+    </ChakraProvider>
   );
 }
 ```
 
-Finally, use hooks! Every component inside the `TerraProvider` is now set up to use the wizard hooks.
+Finally, use hooks! Let's check balance of the current wallet.
 
-```tsx {5,6,7-9}
-import { useBalance, useAddress } from "@wizard-ui/terra";
+```tsx {4,5,17,19}
+import { useBalance, useAddress } from "@wizard-ui/react";
 
 function Profile() {
-  const address = useAddress();
-  const balance = useBalance("uluna");
+  const { address } = useWallet();
+  const { data: ulunaBalance } = useBalance({ address, token: "uosmo" });
 
   if (address == null) {
     return <div>Not connected</div>;
@@ -58,7 +58,7 @@ function Profile() {
 
   return (
     <div>
-      Connected to {address} with {balance} LUNA
+      Connected to {address} with {ulunaBalance} LUNA
     </div>
   );
 }

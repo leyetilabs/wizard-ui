@@ -13,6 +13,8 @@ import {
   WalletNotReadyError,
   WalletReadyState,
 } from "@wizard-ui/core";
+import { EncodeObject } from "@cosmjs/proto-signing";
+import { StdFee } from "@cosmjs/stargate";
 
 import { WalletNotSelectedError } from "../errors";
 import type { Wallet } from "../hooks";
@@ -30,19 +32,19 @@ export interface WalletProviderProps {
 const initialState: {
   wallet: Wallet | null;
   adapter: any | null;
-  publicKey: any | null;
+  address: any | null;
   connected: boolean;
 } = {
   wallet: null,
   adapter: null,
-  publicKey: null,
+  address: null,
   connected: false,
 };
 
 export const WalletProvider: FC<WalletProviderProps> = ({
   children,
   wallets: adapters,
-  autoConnect = false,
+  autoConnect = true,
   onError,
   localStorageKey = "walletName",
 }) => {
@@ -52,7 +54,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({
       defaultValue: null,
     }
   );
-  const [{ wallet, adapter, publicKey, connected }, setState] =
+  const [{ wallet, adapter, address, connected }, setState] =
     useState(initialState);
   const readyState = adapter?.readyState || WalletReadyState.Unsupported;
   const [connecting, setConnecting] = useState(false);
@@ -103,7 +105,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({
         wallet,
         adapter: wallet.adapter,
         connected: wallet.adapter.connected,
-        publicKey: wallet.adapter.publicKey,
+        address: wallet.adapter.address,
       });
     } else {
       setState(initialState);
@@ -157,7 +159,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({
     setState((state) => ({
       ...state,
       connected: adapter.connected,
-      publicKey: adapter.publicKey,
+      address: adapter.address,
     }));
   }, [adapter]);
 
@@ -265,23 +267,51 @@ export const WalletProvider: FC<WalletProviderProps> = ({
 
   // Send a transaction using the provided connection
   const sendTransaction = useCallback(
-    async (transaction: any, connection: any, options?: any) => {
+    async ({
+      signerAddress,
+      messages,
+      fee,
+      memo,
+    }: {
+      signerAddress: string;
+      messages: EncodeObject[];
+      fee: number | StdFee | "auto";
+      memo?: string;
+    }) => {
       if (!adapter) throw handleError(new WalletNotSelectedError());
       if (!connected) throw handleError(new WalletNotConnectedError());
-      return await adapter.sendTransaction(transaction, connection, options);
+      return await adapter.sendTransaction({
+        signerAddress,
+        messages,
+        fee,
+        memo,
+      });
     },
     [adapter, handleError, connected]
   );
 
   // Sign a transaction if the wallet supports it
-  const signTransaction = useMemo(
-    () =>
-      adapter && "signTransaction" in adapter
-        ? async (transaction: any): Promise<any> => {
-            if (!connected) throw handleError(new WalletNotConnectedError());
-            return await adapter.signTransaction(transaction);
-          }
-        : undefined,
+  const signTransaction = useCallback(
+    async ({
+      signerAddress,
+      messages,
+      fee,
+      memo,
+    }: {
+      signerAddress: string;
+      messages: EncodeObject[];
+      fee: StdFee;
+      memo: string;
+    }): Promise<any> => {
+      if (!adapter) throw handleError(new WalletNotSelectedError());
+      if (!connected) throw handleError(new WalletNotConnectedError());
+      return await adapter.signTransaction({
+        signerAddress,
+        messages,
+        fee,
+        memo,
+      });
+    },
     [adapter, handleError, connected]
   );
 
@@ -291,7 +321,8 @@ export const WalletProvider: FC<WalletProviderProps> = ({
         autoConnect,
         wallets,
         wallet,
-        publicKey,
+        client: adapter?._wallet,
+        address,
         connected,
         connecting,
         disconnecting,

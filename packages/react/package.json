@@ -1,6 +1,6 @@
 {
   "name": "@wizard-ui/react",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -30,16 +30,16 @@
   },
   "peerDependencies": {
     "@chakra-ui/react": "^2.2.0",
+    "@cosmjs/cosmwasm-stargate": "^0.28.11",
+    "@tanstack/react-query": "^4.1.0",
+    "@wizard-ui/core": "*",
     "react": "^18.1.0",
-    "react-dom": "^18.1.0",
-    "react-query": "^3.39.1"
+    "react-dom": "^18.1.0"
   },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
-    "@cosmjs/cosmwasm-stargate": "^0.28.11",
-    "@wizard-ui/core": "*",
     "ahooks": "^3.7.0",
     "rifm": "^0.12.1"
   }

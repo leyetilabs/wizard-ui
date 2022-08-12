@@ -1,42 +1,88 @@
+---
+title: "useBalance"
+description: "React Hook for fetching balance information for Coins or CW20 tokens."
+---
+
 # useBalance
 
-Hook for fetching balance for Luna or CW-20 tokens.
+React Hook for fetching balance information for Coins or CW20 tokens.
 
 ```ts
-import { useBalance } from "@wizard-ui/terra";
+import { useBalance } from "@wizard-ui/react";
 ```
 
 ## Usage
 
 ```tsx
-import { useBalance } from "@wizard-ui/terra";
+import { useBalance, useWallet } from "@wizard-ui/react";
 
 function App() {
-  const balance = useBalance("uluna");
+  const { address } = useWallet();
+  const { data, isError, isLoading } = useBalance({ address, token: "uluna" });
 
-  return <div>Balance: {balance}</div>;
+  if (isLoading) return <div>Fetching balance…</div>;
+  if (isError) return <div>Error fetching balance</div>;
+  return <div>Balance: {data}</div>;
 }
 ```
 
 ## Return Value
 
 ```tsx
-string | null;
+{
+  data?: string
+  error?: Error
+  isIdle: boolean
+  isLoading: boolean
+  isFetching: boolean
+  isSuccess: boolean
+  isError: boolean
+  isFetched: boolean
+  isRefetching: boolean
+  refetch: (options: {
+    throwOnError: boolean
+    cancelRefetch: boolean
+  }) => Promise<string>
+  status: 'idle' | 'error' | 'loading' | 'success'
+}
 ```
 
 ## Configuration
 
-### Specity address
+### address
 
-Address to fetch balance for. If `address` is not defined, hook will use the connected wallet address.
+Address to fetch balance for.
 
 ```tsx {5}
-import { useBalance } from "@wizard-ui/terra";
+import { useBalance } from "@wizard-ui/react";
 
 function App() {
-  const balance = useBalance(
-    "uluna", // native or cw20
-    "terra1vdg4c25t53sqjdfq0tz32g75rlvng5mdz8rk0g" // custom address
-  );
+  const { data, isError, isLoading } = useBalance({
+    address: "osmo1vdg4c25t53sqjdfq0tz32g75rlvng5mdz8rk0g",
+    token: "uosmo", // native or cw20
+  });
+
+  if (isLoading) return <div>Fetching balance…</div>;
+  if (isError) return <div>Error fetching balance</div>;
+  return <div>Balance: {data}</div>;
+}
+```
+
+### token
+
+Address for CW20 token or native denom.
+
+```tsx {6}
+import { useBalance } from "@wizard-ui/react";
+
+function App() {
+  const { data, isError, isLoading } = useBalance({
+    address: "osmo1vdg4c25t53sqjdfq0tz32g75rlvng5mdz8rk0g",
+    token: "osmo12z0kqd9y28znzjk7pa8e0646nmhrctxnw0nj7265hzgazzml7uuqe88thx", // native or cw20
+  });
+
+  if (isLoading) return <div>Fetching balance…</div>;
+  if (isError) return <div>Error fetching balance</div>;
+  return <div>Balance: {data}</div>;
 }
 ```

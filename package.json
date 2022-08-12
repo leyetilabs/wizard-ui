@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": false,
   "workspaces": [
-    "apps/starter",
+    "apps/*",
     "packages/*"
   ],
   "scripts": {

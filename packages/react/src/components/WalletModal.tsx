@@ -1,6 +1,6 @@
 import type { WalletName } from "@wizard-ui/core";
 import { WalletReadyState } from "@wizard-ui/core";
-import type { FC, MouseEvent } from "react";
+import type { FC } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -52,7 +52,7 @@ export const WalletModal: FC<WalletModalProps> = ({ className = "" }) => {
   }, [hideModal]);
 
   const handleWalletClick = useCallback(
-    (event: MouseEvent, walletName: WalletName) => {
+    (walletName: WalletName) => {
       select(walletName);
       handleClose();
     },
@@ -78,13 +78,11 @@ export const WalletModal: FC<WalletModalProps> = ({ className = "" }) => {
             >
               Connect wallet
             </Heading>
-            <Box>
+            <Box width="full">
               {installedWallets.map((wallet) => (
                 <WalletListItem
                   key={wallet.adapter.name}
-                  handleClick={(event) =>
-                    handleWalletClick(event, wallet.adapter.name)
-                  }
+                  handleClick={() => handleWalletClick(wallet.adapter.name)}
                   wallet={wallet}
                 />
               ))}
