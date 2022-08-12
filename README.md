@@ -1,8 +1,8 @@
-<h1 align="center">Build badass Terra dApps ⚡️</h1>
+<h1 align="center">Build badass Cosmos frontend ⚡️</h1>
 
 <br>
 
-Wizard UI provides a set of reusable React components and hooks that make it super easy to create Terra dApps.
+Wizard UI provides a set of reusable React components and hooks that make it super easy to create Cosmos frontend.
 
 ## Looking for the documentation? 📝
 

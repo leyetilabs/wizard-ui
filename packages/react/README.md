@@ -1,4 +1,4 @@
-Components to build dApps
+Hooks and components to build Cosmos frontend
 
 <a href="https://www.npmjs.com/package/@wizard-ui/react" target="\_parent">
   <img alt="" src="https://img.shields.io/npm/dm/@wizard-ui/react.svg" />
@@ -10,7 +10,6 @@ Components to build dApps
   <img alt="" src="https://img.shields.io/twitter/follow/arthuryeti.svg?style=social&label=Follow" />
 </a>
 
-<!-- ## Visit [react-query.tanstack.com](https://react-query.tanstack.com) for docs, guides, API and more!
+## Quick Features
 
-Still on **React Query v2**? No problem! Check out the v2 docs here:
-https://react-query-v2.tanstack.com/. -->
+- `useBalance` to fetch native Coin or CW20 token balance

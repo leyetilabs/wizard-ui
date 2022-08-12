@@ -1,6 +1,6 @@
 import { useTheme } from "next-themes";
 
-const github = "https://github.com/leyetilabs/Terra";
+const github = "https://github.com/leyetilabs/wizard-ui";
 
 export default {
   docsRepositoryBase: `${github}/tree/main/docs/pages`,
@@ -21,11 +21,11 @@ export default {
     const { systemTheme } = useTheme();
     const description_ =
       meta.description_ ||
-      'Wizard UI is a collection of React Hooks containing everything you need to start working with Terra. lfg makes it easy to "Connect Wallet," display ENS and balance information, sign messages, interact with contracts, and much more — all with caching, request deduplication, and persistence.';
+      'Wizard UI is a collection of React Hooks containing everything you need to start working with Cosmos. lfg makes it easy to "Connect Wallet," display ENS and balance information, sign messages, interact with contracts, and much more — all with caching, request deduplication, and persistence.';
     const title_ =
       title && !title.startsWith("Wizard")
         ? title + " – Wizard UI"
-        : "Wizard UI: React Components and Hooks for Terra";
+        : "Wizard UI: React Components and Hooks for Cosmos";
     return (
       <>
         {/* General */}
@@ -60,7 +60,7 @@ export default {
       <>
         <span className="mr-2 font-extrabold">Wizard UI</span>
         <span className="text-gray-600 font-normal hidden md:inline">
-          React Components and Hooks for Terra
+          React Components and Hooks for Cosmos
         </span>
       </>
     );

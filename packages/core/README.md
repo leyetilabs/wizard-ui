@@ -1,4 +1,4 @@
-Hooks to build Terra dApps
+Core to build Cosmos frontend
 
 <a href="https://www.npmjs.com/package/@wizard-ui/react" target="\_parent">
   <img alt="" src="https://img.shields.io/npm/dm/@wizard-ui/react.svg" />
@@ -9,8 +9,3 @@ Hooks to build Terra dApps
 </a><a href="https://twitter.com/arthuryeti" target="\_parent">
   <img alt="" src="https://img.shields.io/twitter/follow/arthuryeti.svg?style=social&label=Follow" />
 </a>
-
-## Quick Features
-
-- `useTerra` to post transactions in the best way
-- `useBalance` to fetch native Coin or CW20 token balance
