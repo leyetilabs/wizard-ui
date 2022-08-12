@@ -1,4 +1,4 @@
-import type { SystemStyleObject } from "@chakra-ui/theme-tools";
+import type { SystemStyleObject } from "@chakra-ui/styled-system";
 
 const baseStyleBody: SystemStyleObject = {
   p: 6,

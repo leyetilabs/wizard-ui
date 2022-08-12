@@ -1,7 +1,7 @@
 import type {
   SystemStyleObject,
   PartsStyleObject,
-} from "@chakra-ui/theme-tools";
+} from "@chakra-ui/styled-system";
 
 const baseStyleTrack: SystemStyleObject = {
   bg: "whiteAlpha.200",

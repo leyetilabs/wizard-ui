@@ -1,12 +1,6 @@
 import * as React from "react";
 import NextScript from "next/script";
-import {
-  WalletControllerChainOptions,
-  getChainOptions,
-  StaticWalletProvider,
-  WalletProvider,
-} from "@terra-money/wallet-provider";
-import App, { AppProps, AppContext } from "next/app";
+import { AppProps } from "next/app";
 
 import "../styles/globals.css";
 import "nextra-theme-docs/style.css";
@@ -18,12 +12,7 @@ import { encodeBase64 } from "../lib/encode";
 
 const themeKey = "theme";
 
-function MyApp({
-  Component,
-  pageProps,
-  defaultNetwork,
-  walletConnectChainIds,
-}: AppProps & WalletControllerChainOptions) {
+function MyApp({ Component, pageProps }: AppProps) {
   const themeScriptSrc = `!function(){try{var d=document.documentElement;var e=localStorage.getItem(${themeKey});if(e){d.setAttribute('data-theme',e.trim())}else{d.setAttribute('data-theme','light');}}catch(t){}}();`;
 
   // We MUST use next/script's `beforeInteractive` strategy to avoid flashing on load.
@@ -37,7 +26,7 @@ function MyApp({
   const getLayout =
     (Component as any).getLayout || ((page: React.ReactElement) => page);
 
-  const main = (
+  return (
     <>
       {/* Set theme directly or load from cookie to prevent flash */}
       <NextScript
@@ -49,25 +38,6 @@ function MyApp({
       <Providers>{getLayout(<Component {...pageProps} />)}</Providers>
     </>
   );
-
-  return typeof window !== "undefined" ? (
-    <WalletProvider
-      defaultNetwork={defaultNetwork}
-      walletConnectChainIds={walletConnectChainIds}
-    >
-      {main}
-    </WalletProvider>
-  ) : (
-    <StaticWalletProvider defaultNetwork={defaultNetwork}>
-      {main}
-    </StaticWalletProvider>
-  );
 }
-
-MyApp.getInitialProps = async (appContext: AppContext) => {
-  const appProps = await App.getInitialProps(appContext);
-  const chainOptions = await getChainOptions();
-  return { ...appProps, ...chainOptions };
-};
 
 export default MyApp;

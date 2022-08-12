@@ -2,7 +2,7 @@ import { tabsAnatomy as parts } from "@chakra-ui/anatomy";
 import type {
   PartsStyleFunction,
   SystemStyleObject,
-} from "@chakra-ui/theme-tools";
+} from "@chakra-ui/styled-system";
 
 const baseStyleTabpanel: SystemStyleObject = {
   p: 0,

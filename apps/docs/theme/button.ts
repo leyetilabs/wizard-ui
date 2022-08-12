@@ -1,8 +1,8 @@
+import { getColor } from "@chakra-ui/theme-tools";
 import {
   SystemStyleObject,
   SystemStyleFunction,
-  getColor,
-} from "@chakra-ui/theme-tools";
+} from "@chakra-ui/styled-system";
 
 const baseStyle: SystemStyleObject = {
   fontWeight: 500,
@@ -33,7 +33,7 @@ const variantOutline: SystemStyleFunction = (props) => {
 };
 
 const variantSolid: SystemStyleFunction = (props) => {
-  const { colorScheme: c, theme } = props;
+  const { colorScheme: c } = props;
 
   return {
     bg: `${c}.600`,

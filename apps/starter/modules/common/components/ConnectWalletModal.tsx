@@ -1,5 +1,4 @@
 import React, { FC } from "react";
-import { useWallet, WalletStatus } from "@terra-money/wallet-provider";
 import {
   Modal,
   ModalOverlay,
@@ -11,6 +10,7 @@ import {
   Heading,
   chakra,
 } from "@chakra-ui/react";
+import { useWallet } from "@wizard-ui/react";
 
 type Props = {
   isOpen: boolean;
@@ -18,7 +18,7 @@ type Props = {
 };
 
 const ConnectWalletModal: FC<Props> = ({ isOpen, onClose }) => {
-  const { status, availableConnections, connect } = useWallet();
+  const { connect } = useWallet();
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="sm">
@@ -39,36 +39,27 @@ const ConnectWalletModal: FC<Props> = ({ isOpen, onClose }) => {
             >
               Connect wallet
             </Heading>
-            {status === WalletStatus.WALLET_NOT_CONNECTED && (
-              <>
-                {availableConnections.map(
-                  ({ type, name, icon, identifier = "" }) => (
-                    <chakra.button
-                      transition="0.2s all"
-                      p="4"
-                      borderRadius="xl"
-                      bg="brand.900"
-                      width="100%"
-                      mb="4"
-                      _hover={{
-                        bg: "whiteAlpha.100",
-                      }}
-                      key={"connection-" + type + identifier}
-                      onClick={() => connect(type, identifier)}
-                    >
-                      <HStack spacing="6">
-                        <img
-                          src={icon}
-                          alt={name}
-                          style={{ width: "1.5rem", height: "1.5rem" }}
-                        />
-                        <Text>{name}</Text>
-                      </HStack>
-                    </chakra.button>
-                  ),
-                )}
-              </>
-            )}
+            <chakra.button
+              transition="0.2s all"
+              p="4"
+              borderRadius="xl"
+              bg="brand.900"
+              width="100%"
+              mb="4"
+              _hover={{
+                bg: "whiteAlpha.100",
+              }}
+              onClick={() => connect()}
+            >
+              <HStack spacing="6">
+                {/* <img
+                  src={icon}
+                  alt={name}
+                  style={{ width: "1.5rem", height: "1.5rem" }}
+                /> */}
+                <Text>Keplr</Text>
+              </HStack>
+            </chakra.button>
           </Flex>
         </ModalBody>
       </ModalContent>

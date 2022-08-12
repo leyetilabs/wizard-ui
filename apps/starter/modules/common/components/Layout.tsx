@@ -1,6 +1,5 @@
 import React from "react";
 import { Box } from "@chakra-ui/react";
-import { useWallet, WalletStatus } from "@terra-money/wallet-provider";
 
 import { Navbar } from "modules/common";
 
@@ -9,13 +8,6 @@ interface Props {
 }
 
 function Layout({ children }: Props) {
-  const wallet = useWallet();
-  const isInitializing = wallet.status == WalletStatus.INITIALIZING;
-
-  if (isInitializing) {
-    return null;
-  }
-
   return (
     <Box>
       <Navbar />

@@ -3,8 +3,7 @@ import type {
   PartsStyleFunction,
   PartsStyleObject,
   SystemStyleObject,
-} from "@chakra-ui/theme-tools";
-import { getColor } from "@chakra-ui/theme-tools";
+} from "@chakra-ui/styled-system";
 
 const size: Record<string, SystemStyleObject> = {
   md: {
@@ -19,9 +18,7 @@ const sizes: Record<string, PartsStyleObject<typeof parts>> = {
   },
 };
 
-const variantOutline: PartsStyleFunction<typeof parts> = (props) => {
-  const { theme } = props;
-
+const variantOutline: PartsStyleFunction<typeof parts> = () => {
   return {
     field: {
       bg: "whiteAlpha.200",

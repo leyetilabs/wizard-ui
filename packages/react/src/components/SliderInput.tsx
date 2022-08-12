@@ -9,8 +9,7 @@ import {
   Flex,
   SliderProps,
 } from "@chakra-ui/react";
-
-import { formatAmount, NumberFormatSpecifier } from "../helpers";
+import { formatAmount, NumberFormatSpecifier } from "@wizard-ui/core";
 
 interface SliderInputStepButtonProps {
   sliderValue: number;

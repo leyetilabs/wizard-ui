@@ -1,17 +1,10 @@
-const withTM = require("next-transpile-modules")([
-  "@wizard-ui/react",
-  "@wizard-ui/terra",
-]);
+const withTM = require("next-transpile-modules")(["d3-format"]);
 
 /** @type {import('next').NextConfig} */
 const config = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   experimental: {
     esmExternals: "loose",
-  },
-  webpack: function (config) {
-    config.experiments = { asyncWebAssembly: true, syncWebAssembly: true };
-    return config;
   },
 };
 

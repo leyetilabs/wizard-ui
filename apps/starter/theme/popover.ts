@@ -2,7 +2,7 @@ import { popoverAnatomy as parts } from "@chakra-ui/anatomy";
 import type {
   PartsStyleFunction,
   SystemStyleObject,
-} from "@chakra-ui/theme-tools";
+} from "@chakra-ui/styled-system";
 
 const baseStyleContent: SystemStyleObject = {
   borderColor: "gray.200",

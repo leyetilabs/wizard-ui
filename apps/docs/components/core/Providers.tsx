@@ -1,7 +1,8 @@
-import * as React from "react";
-import { TerraProvider } from "@wizard-ui/terra";
+import React, { useMemo } from "react";
 import { ChakraProvider, CSSReset } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { KeplrWalletAdapter } from "@wizard-ui/core";
+import { ConnectionProvider, WalletProvider } from "@wizard-ui/react";
 
 import theme from "../../theme";
 
@@ -12,14 +13,28 @@ type Props = {
 };
 
 export function Providers({ children }: Props) {
+  const endpoint = useMemo(() => "https://pisco.dalnim.finance", []);
+  const chainId = useMemo(() => "pisco-1", []);
+  const wallets = useMemo(() => [new KeplrWalletAdapter()], []);
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <ChakraProvider theme={theme}>
-        <TerraProvider>
+    <ConnectionProvider endpoint={endpoint}>
+      {/* <WalletProvider wallets={wallets} chainId={chainId} autoConnect> */}
+      <QueryClientProvider client={queryClient}>
+        <ChakraProvider theme={theme}>
           <CSSReset />
           {children}
-        </TerraProvider>
-      </ChakraProvider>
-    </QueryClientProvider>
+        </ChakraProvider>
+      </QueryClientProvider>
+      {/* </WalletProvider> */}
+    </ConnectionProvider>
   );
+  // return (
+  //   <QueryClientProvider client={queryClient}>
+  //     <ChakraProvider theme={theme}>
+  //       <CSSReset />
+  //       {children}
+  //     </ChakraProvider>
+  //   </QueryClientProvider>
+  // );
 }

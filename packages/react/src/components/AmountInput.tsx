@@ -9,7 +9,7 @@ import {
   formatAmount,
   NumberFormatSpecifier,
   num,
-} from "../helpers";
+} from "@wizard-ui/core";
 
 export type AmountInputProps = {
   value: string;

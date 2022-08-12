@@ -1,59 +1,28 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Button, Box, Text, SimpleGrid } from "@chakra-ui/react";
-import { MsgExecuteContract, Coin } from "@terra-money/terra.js";
-import {
-  num,
-  AmountWithSliderInput,
-  formatAmount,
-  NumberFormatSpecifier,
-  AmountInput,
-} from "@wizard-ui/react";
-import { useAddress, useTerra } from "@wizard-ui/terra";
+import { NumberFormatSpecifier, formatAmount } from "@wizard-ui/core";
+import { AmountWithSliderInput, AmountInput } from "@wizard-ui/react";
 
 import { MinimalLineChart, Stat } from "modules/common";
 
 export default function Web() {
-  const address = useAddress();
-  const { tx } = useTerra();
+  // const { tx } = useCosmos();
   const [vaultValue, setVaultValue] = useState(1.23);
   const [amount, setAmount] = useState("");
   const [amount1, setAmount1] = useState("");
   const [amount2, setAmount2] = useState("");
 
-  const msgs = useMemo(() => {
-    if (address == null) {
-      return;
-    }
-
-    const amount = num(0.5).times(10 ** 6);
-
-    const coins = [new Coin("uluna", amount.toNumber())];
-
-    return [
-      new MsgExecuteContract(
-        address,
-        "terra1udsua9w6jljwxwgwsegvt6v657rg3ayfvemupnes7lrggd28s0wq7g8azm",
-        {
-          swap: {
-            max_spread: "0.1",
-            offer_asset: {
-              info: { native_token: { denom: "uluna" } },
-              amount: amount.toString(),
-            },
-            belief_price: "0.005899736340782930",
-          },
-        },
-        coins,
-      ),
-    ];
-  }, [address]);
-
   const handleClick = () => {
-    if (msgs == null) {
-      return;
-    }
-
-    tx.submit({ msgs });
+    // tx.submit({
+    //   contractAddress:
+    //     "terra1lm7d4zr97rzp3a22szdv6ucpeyckyl2l2wh6jc9qrga78eyrvamsjgs5q6",
+    //   msg: {
+    //     bond: {
+    //       amount: "500000",
+    //     },
+    //   },
+    //   funds: [coin("500000", "uluna")],
+    // });
   };
 
   return (

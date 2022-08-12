@@ -1,8 +1,8 @@
 import {
   SystemStyleObject,
   SystemStyleFunction,
-  getColor,
-} from "@chakra-ui/theme-tools";
+} from "@chakra-ui/styled-system";
+import { getColor } from "@chakra-ui/theme-tools";
 
 const baseStyle: SystemStyleObject = {
   fontWeight: 500,

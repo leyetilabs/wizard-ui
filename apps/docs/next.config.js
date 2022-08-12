@@ -1,6 +1,6 @@
 const withTM = require("next-transpile-modules")([
   "@wizard-ui/react",
-  "@wizard-ui/terra",
+  "@wizard-ui/core",
 ]);
 
 const withNextra = require("nextra")({

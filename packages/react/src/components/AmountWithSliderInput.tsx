@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from "react";
 import { Box, SliderProps } from "@chakra-ui/react";
+import { num } from "@wizard-ui/core";
 
 import { AmountInput } from "./AmountInput";
 import { SliderInput } from "./SliderInput";
-import { num } from "../helpers";
 
 interface Props {
   max: string;

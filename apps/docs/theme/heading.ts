@@ -1,4 +1,4 @@
-import { SystemStyleObject } from "@chakra-ui/theme-tools";
+import { SystemStyleObject } from "@chakra-ui/styled-system";
 
 const baseStyle: SystemStyleObject = {
   fontWeight: "400",
