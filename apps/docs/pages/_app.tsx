@@ -9,10 +9,12 @@ import "nextra-theme-docs/style.css";
 // eslint-disable-next-line import/no-unresolved
 import { Providers } from "../components/core";
 import { encodeBase64 } from "../lib/encode";
+import { useFathom } from "../hooks";
 
 const themeKey = "theme";
 
 function MyApp({ Component, pageProps }: AppProps) {
+  useFathom();
   const themeScriptSrc = `!function(){try{var d=document.documentElement;var e=localStorage.getItem(${themeKey});if(e){d.setAttribute('data-theme',e.trim())}else{d.setAttribute('data-theme','light');}}catch(t){}}();`;
 
   // We MUST use next/script's `beforeInteractive` strategy to avoid flashing on load.
