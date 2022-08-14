@@ -1,5 +1,16 @@
 # @arthuryeti/terra
 
+## 2.1.0
+
+### Minor Changes
+
+- Add support for Cosmostation Wallet
+
+### Patch Changes
+
+- Updated dependencies
+  - @wizard-ui/core@1.1.0
+
 ## 2.0.0
 
 ### Major Changes

@@ -1,9 +1,8 @@
 import React, { FC } from "react";
-import { useWallet, WalletModalButton } from "@wizard-ui/react";
+import { useWallet, useWalletModal, WalletModalButton } from "@wizard-ui/react";
 import { truncate } from "@wizard-ui/core";
 import {
   HStack,
-  useDisclosure,
   Box,
   IconButton,
   Button,
@@ -14,11 +13,9 @@ import {
 } from "@chakra-ui/react";
 import { ChevronDown as ChevronDownIcon, Bell as BellIcon } from "lucide-react";
 
-import ConnectWalletModal from "./ConnectWalletModal";
-
 export const CosmosWallet: FC = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { address } = useWallet();
+  const { setVisible } = useWalletModal();
+  const { address, disconnect } = useWallet();
 
   if (address != null) {
     return (
@@ -33,7 +30,10 @@ export const CosmosWallet: FC = () => {
               {truncate(address)}
             </MenuButton>
             <MenuList>
-              <MenuItem>Copy Address</MenuItem>
+              <MenuItem onClick={() => setVisible(true)}>
+                Change wallet
+              </MenuItem>
+              <MenuItem onClick={disconnect}>Disconnect</MenuItem>
             </MenuList>
           </Menu>
         </HStack>

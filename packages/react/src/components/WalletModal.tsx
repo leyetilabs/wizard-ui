@@ -1,16 +1,16 @@
+import React, { useCallback, useMemo } from "react";
+import type { FC } from "react";
 import type { WalletName } from "@wizard-ui/core";
 import { WalletReadyState } from "@wizard-ui/core";
-import type { FC } from "react";
 import {
   Modal,
   ModalOverlay,
   ModalContent,
   Flex,
-  Box,
   ModalBody,
   Heading,
+  VStack,
 } from "@chakra-ui/react";
-import React, { useCallback, useMemo } from "react";
 
 // import { Collapse } from "./Collapse";
 import { useWalletModal, useWallet, Wallet } from "../hooks";
@@ -78,7 +78,7 @@ export const WalletModal: FC<WalletModalProps> = ({ className = "" }) => {
             >
               Connect wallet
             </Heading>
-            <Box width="full">
+            <VStack width="full">
               {installedWallets.map((wallet) => (
                 <WalletListItem
                   key={wallet.adapter.name}
@@ -86,7 +86,7 @@ export const WalletModal: FC<WalletModalProps> = ({ className = "" }) => {
                   wallet={wallet}
                 />
               ))}
-            </Box>
+            </VStack>
           </Flex>
         </ModalBody>
       </ModalContent>

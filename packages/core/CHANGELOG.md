@@ -1,5 +1,11 @@
 # @arthuryeti/terra
 
+## 1.1.0
+
+### Minor Changes
+
+- Add support for Cosmostation Wallet
+
 ## 1.0.0
 
 ### Major Changes

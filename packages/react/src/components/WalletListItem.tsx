@@ -24,7 +24,7 @@ export const WalletListItem: FC<WalletListItemProps> = ({
           <Text>{wallet.adapter.name}</Text>
         </HStack>
         {wallet.readyState === WalletReadyState.Installed && (
-          <Text>Detected</Text>
+          <Text color="gray.700">Installed</Text>
         )}
       </Flex>
     </Button>

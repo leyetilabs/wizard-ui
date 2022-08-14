@@ -1,7 +1,10 @@
 import { Keplr as WindowKeplr } from "@keplr-wallet/types";
-import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
+import {
+  SigningCosmWasmClient,
+  SigningCosmWasmClientOptions,
+} from "@cosmjs/cosmwasm-stargate";
 import { EncodeObject } from "@cosmjs/proto-signing";
-import { StdFee, GasPrice } from "@cosmjs/stargate";
+import { StdFee } from "@cosmjs/stargate";
 
 import {
   WalletName,
@@ -59,6 +62,7 @@ declare const window: KeplrWindow;
 export interface KeplrWalletAdapterConfig {
   endpoint: string;
   chainId: string;
+  options?: SigningCosmWasmClientOptions;
 }
 
 export const KeplrWalletName = "Keplr Wallet" as WalletName;
@@ -72,6 +76,7 @@ export class KeplrWalletAdapter extends BaseSignerWalletAdapter {
 
   private _connecting: boolean;
   private _wallet: KeplrWallet | null;
+  private _options: SigningCosmWasmClientOptions | undefined;
   private _chainId: string;
   private _endpoint: string;
   private _address: any | null;
@@ -87,6 +92,7 @@ export class KeplrWalletAdapter extends BaseSignerWalletAdapter {
     this._address = null;
     this._chainId = config.chainId;
     this._endpoint = config.endpoint;
+    this._options = config.options;
 
     if (this._readyState !== WalletReadyState.Unsupported) {
       scopePollingDetectionStrategy(() => {
@@ -138,10 +144,7 @@ export class KeplrWalletAdapter extends BaseSignerWalletAdapter {
         wallet = await SigningCosmWasmClient.connectWithSigner(
           this._endpoint,
           offlineSigner,
-          {
-            // @ts-ignore
-            gasPrice: GasPrice.fromString("0.015uosmo"),
-          }
+          this._options
         );
       } catch (error: any) {
         throw new WalletConnectionError(error?.message, error);
