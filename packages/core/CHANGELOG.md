@@ -1,5 +1,11 @@
 # @arthuryeti/terra
 
+## 1.2.0
+
+### Minor Changes
+
+- Only one provider needed
+
 ## 1.1.0
 
 ### Minor Changes

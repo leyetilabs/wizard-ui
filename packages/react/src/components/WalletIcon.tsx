@@ -1,6 +1,5 @@
 import React from "react";
 import type { DetailedHTMLProps, FC, ImgHTMLAttributes } from "react";
-import { Image } from "@chakra-ui/react";
 
 import type { Wallet } from "../hooks";
 
@@ -13,14 +12,15 @@ export interface WalletIconProps
 }
 
 export const WalletIcon: FC<WalletIconProps> = ({ wallet, ...props }) => {
+  if (!wallet) {
+    return null;
+  }
+
   return (
-    wallet && (
-      <Image
-        src={wallet.adapter.icon}
-        alt={`${wallet.adapter.name} icon`}
-        boxSize="1.5rem"
-        {...props}
-      />
-    )
+    <img
+      src={wallet.adapter.icon}
+      alt={`${wallet.adapter.name} icon`}
+      {...props}
+    />
   );
 };

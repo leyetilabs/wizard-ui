@@ -1,16 +1,8 @@
-import React, { useCallback, useMemo } from "react";
+import React, { Fragment, useCallback, useMemo } from "react";
 import type { FC } from "react";
+import { Dialog, Transition } from "@headlessui/react";
 import type { WalletName } from "@wizard-ui/core";
 import { WalletReadyState } from "@wizard-ui/core";
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  Flex,
-  ModalBody,
-  Heading,
-  VStack,
-} from "@chakra-ui/react";
 
 // import { Collapse } from "./Collapse";
 import { useWalletModal, useWallet, Wallet } from "../hooks";
@@ -18,7 +10,6 @@ import { WalletListItem } from "./WalletListItem";
 
 export interface WalletModalProps {
   className?: string;
-  container?: string;
 }
 
 export const WalletModal: FC<WalletModalProps> = ({ className = "" }) => {
@@ -43,13 +34,9 @@ export const WalletModal: FC<WalletModalProps> = ({ className = "" }) => {
     return [installed, [...loadable, ...notDetected]];
   }, [wallets]);
 
-  const hideModal = useCallback(() => {
-    setTimeout(() => setVisible(false), 150);
-  }, []);
-
   const handleClose = useCallback(() => {
-    hideModal();
-  }, [hideModal]);
+    setVisible(false);
+  }, []);
 
   const handleWalletClick = useCallback(
     (walletName: WalletName) => {
@@ -60,36 +47,50 @@ export const WalletModal: FC<WalletModalProps> = ({ className = "" }) => {
   );
 
   return (
-    <Modal isOpen={visible} onClose={handleClose} size="sm">
-      <ModalOverlay />
-      <ModalContent>
-        <ModalBody>
-          <Flex
-            direction="column"
-            justify="center"
-            align="center"
-            textAlign="center"
-          >
-            <Heading
-              size="sm"
-              mb="8"
-              textTransform="uppercase"
-              color="whiteAlpha.600"
+    <Transition appear show={visible} as={Fragment}>
+      <Dialog as="div" className="wz-modal" onClose={handleClose}>
+        <Transition.Child
+          as="div"
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="wz-modal-backdrop" aria-hidden="true" />
+        </Transition.Child>
+
+        <div className="wz-modal-wrapper">
+          <div className="wz-modal-body">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
             >
-              Connect wallet
-            </Heading>
-            <VStack width="full">
-              {installedWallets.map((wallet) => (
-                <WalletListItem
-                  key={wallet.adapter.name}
-                  handleClick={() => handleWalletClick(wallet.adapter.name)}
-                  wallet={wallet}
-                />
-              ))}
-            </VStack>
-          </Flex>
-        </ModalBody>
-      </ModalContent>
-    </Modal>
+              <Dialog.Panel className="wz-modal-content">
+                <Dialog.Title as="h3" className="wz-modal-title">
+                  Connect wallet
+                </Dialog.Title>
+
+                <div className="wz-wallets">
+                  {installedWallets.map((wallet) => (
+                    <WalletListItem
+                      key={wallet.adapter.name}
+                      handleClick={() => handleWalletClick(wallet.adapter.name)}
+                      wallet={wallet}
+                    />
+                  ))}
+                </div>
+              </Dialog.Panel>
+            </Transition.Child>
+          </div>
+        </div>
+      </Dialog>
+    </Transition>
   );
 };

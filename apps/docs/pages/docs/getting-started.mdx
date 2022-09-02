@@ -2,7 +2,7 @@ import Callout from "nextra-theme-docs/callout";
 
 # Getting Started
 
-Wizard UI depends on Chakra UI, React Query and @cosmjs.
+Wizard UI depends on React Query and @cosmjs.
 
 ## Installation
 
@@ -14,51 +14,72 @@ npm install @wizard-ui/core @wizard-ui/react
 
 ## Quick Start
 
-First, add the `ConnectionProvider`, `WalletProvider` and `WalletModalProvider` to your app.
+First, add the `WizardProvider` to your app (\_app.tsx if you're using next).
 
-```tsx {4,5,17,19}
-import { ChakraProvider } from "@chakra-ui/react";
+```tsx
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {
-  ConnectionProvider,
-  WalletProvider,
-  WalletModalProvider,
-  theme,
-} from "@wizard-ui/react";
+import { WizardProvider } from "@wizard-ui/react";
+import { KeplrWalletAdapter } from "@wizard-ui/core";
+import { GasPrice } from "@cosmjs/stargate";
+
+import "@wizard-ui/react/style.css";
 
 const queryClient = new QueryClient();
 
 function App() {
+  const endpoint = "https://rpc-test.osmosis.zone";
+  const chainId = "osmo-test-4";
+  const wallets = [
+    new KeplrWalletAdapter({
+      endpoint,
+      chainId,
+      options: {
+        gasPrice: GasPrice.fromString("0.015uosmo"),
+      },
+    }),
+  ];
+
   return (
-    <ChakraProvider theme={theme}>
-      <ConnectionProvider endpoint={endpoint}>
-        <WalletProvider wallets={wallets} chainId={chainId}>
-          <WalletModalProvider>
-            <Component />
-          </WalletModalProvider>
-        </WalletProvider>
-      </ConnectionProvider>
-    </ChakraProvider>
+    <QueryClientProvider client={queryClient}>
+      <WizardProvider endpoint={endpoint} wallets={wallets} chainId={chainId}>
+        <Component />
+      </WizardProvider>
+    </QueryClientProvider>
+  );
+}
+```
+
+Add the `WalletButton` component to let people connect their wallet.
+
+```tsx
+import { WalletButton } from "@wizard-ui/react";
+
+function Navbar() {
+  return (
+    <div>
+      <h1>Cosmos Web App</h1>
+      <WalletButton />
+    </div>
   );
 }
 ```
 
 Finally, use hooks! Let's check balance of the current wallet.
 
-```tsx {4,5,17,19}
+```tsx {5}
 import { useBalance, useAddress } from "@wizard-ui/react";
 
 function Profile() {
-  const { address } = useWallet();
-  const { data: ulunaBalance } = useBalance({ address, token: "uosmo" });
+  const { address, connected } = useWallet();
+  const { data: balance } = useBalance({ address, token: "uosmo" });
 
-  if (address == null) {
+  if (!connected) {
     return <div>Not connected</div>;
   }
 
   return (
     <div>
-      Connected to {address} with {ulunaBalance} LUNA
+      Connected to {address} with {balance} LUNA
     </div>
   );
 }

@@ -1,7 +1,6 @@
 import React from "react";
 import { Flex, Box, HStack, Text } from "@chakra-ui/react";
-
-import { CosmosWallet } from "./CosmosWallet";
+import { WalletButton } from "@wizard-ui/react";
 
 export function Navbar() {
   return (
@@ -28,7 +27,7 @@ export function Navbar() {
         <Text color="white">Cosmos</Text>
       </Box>
       <HStack flex="1" spacing="6" justify="flex-end">
-        <CosmosWallet />
+        <WalletButton />
       </HStack>
     </Flex>
   );

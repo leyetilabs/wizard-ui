@@ -1,7 +1,6 @@
 import type { FC, MouseEventHandler } from "react";
 import { WalletReadyState } from "@wizard-ui/core";
 import type { Wallet } from "@wizard-ui/react";
-import { Button, Flex, Text, HStack } from "@chakra-ui/react";
 
 import { WalletIcon } from "./WalletIcon";
 
@@ -17,16 +16,19 @@ export const WalletListItem: FC<WalletListItemProps> = ({
   wallet,
 }) => {
   return (
-    <Button onClick={handleClick} tabIndex={tabIndex} width="full">
-      <Flex justifyContent="space-between" alignItems="center" width="full">
-        <HStack>
+    <button
+      type="button"
+      onClick={handleClick}
+      tabIndex={tabIndex}
+      className="wz-list-button"
+    >
+      <div>
+        <div>
           <WalletIcon wallet={wallet} />
-          <Text>{wallet.adapter.name}</Text>
-        </HStack>
-        {wallet.readyState === WalletReadyState.Installed && (
-          <Text color="gray.700">Installed</Text>
-        )}
-      </Flex>
-    </Button>
+          <div>{wallet.adapter.name}</div>
+        </div>
+        {wallet.readyState === WalletReadyState.Installed && <p>Installed</p>}
+      </div>
+    </button>
   );
 };

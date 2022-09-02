@@ -1,5 +1,16 @@
 # @arthuryeti/terra
 
+## 2.2.0
+
+### Minor Changes
+
+- Only one provider needed
+
+### Patch Changes
+
+- Updated dependencies
+  - @wizard-ui/core@1.2.0
+
 ## 2.1.0
 
 ### Minor Changes

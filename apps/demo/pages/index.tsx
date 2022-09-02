@@ -3,13 +3,14 @@ import { Button, Box, Text, SimpleGrid } from "@chakra-ui/react";
 import { NumberFormatSpecifier, formatAmount } from "@wizard-ui/core";
 import { toUtf8 } from "@cosmjs/encoding";
 import { MsgExecuteContract } from "cosmjs-types/cosmwasm/wasm/v1/tx";
+import { useWallet } from "@wizard-ui/react";
+
 import {
+  MinimalLineChart,
+  Stat,
   AmountWithSliderInput,
   AmountInput,
-  useWallet,
-} from "@wizard-ui/react";
-
-import { MinimalLineChart, Stat } from "modules/common";
+} from "modules/common";
 
 export default function Web() {
   const { address, sendTransaction } = useWallet();
