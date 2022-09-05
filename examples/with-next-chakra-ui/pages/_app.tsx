@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { AppProps } from "next/app";
 import { ChakraProvider, CSSReset } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -7,8 +7,7 @@ import { GasPrice } from "@cosmjs/stargate";
 import { WizardProvider } from "@wizard-ui/react";
 import "@wizard-ui/react/style.css";
 
-import { Layout } from "modules/common";
-import theme from "../theme";
+import { Layout } from "../components/Layout";
 
 const queryClient = new QueryClient();
 
@@ -16,29 +15,26 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   // You can also provide a custom RPC endpoint
   const endpoint = "https://rpc-test.osmosis.zone";
   const chainId = "osmo-test-4";
-  const wallets = useMemo(
-    () => [
-      new KeplrWalletAdapter({
-        endpoint,
-        chainId,
-        options: {
-          gasPrice: GasPrice.fromString("0.015uosmo"),
-        },
-      }),
-      new CosmostationWalletAdapter({
-        endpoint,
-        chainId,
-        chainName: "osmosis testnet",
-        options: {
-          gasPrice: GasPrice.fromString("0.015uosmo"),
-        },
-      }),
-    ],
-    [endpoint, chainId],
-  );
+  const wallets = [
+    new KeplrWalletAdapter({
+      endpoint,
+      chainId,
+      options: {
+        gasPrice: GasPrice.fromString("0.015uosmo"),
+      },
+    }),
+    new CosmostationWalletAdapter({
+      endpoint,
+      chainId,
+      chainName: "osmosis testnet",
+      options: {
+        gasPrice: GasPrice.fromString("0.015uosmo"),
+      },
+    }),
+  ];
 
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider>
       <WizardProvider endpoint={endpoint} wallets={wallets} chainId={chainId}>
         <QueryClientProvider client={queryClient}>
           <CSSReset />

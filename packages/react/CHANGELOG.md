@@ -1,5 +1,11 @@
 # @arthuryeti/terra
 
+## 2.2.1
+
+### Patch Changes
+
+- Add style.css in export
+
 ## 2.2.0
 
 ### Minor Changes
