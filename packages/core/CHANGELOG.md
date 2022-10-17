@@ -1,5 +1,17 @@
 # @arthuryeti/terra
 
+## 1.3.0
+
+### Minor Changes
+
+- Upgrade deps
+
+## 1.2.1
+
+### Patch Changes
+
+- Update peer dependencies
+
 ## 1.2.0
 
 ### Minor Changes

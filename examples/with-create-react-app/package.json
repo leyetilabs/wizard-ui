@@ -10,7 +10,7 @@
   "dependencies": {
     "@babel/core": "^7.16.0",
     "@chakra-ui/react": "^2.3.1",
-    "@cosmjs/cosmwasm-stargate": "^0.28.13",
+    "@cosmjs/cosmwasm-stargate": "^0.29.2",
     "@cosmostation/cosmos-client": "^0.0.1",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
     "@svgr/webpack": "^5.5.0",

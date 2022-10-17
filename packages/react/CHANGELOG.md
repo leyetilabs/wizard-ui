@@ -1,5 +1,24 @@
 # @arthuryeti/terra
 
+## 2.3.0
+
+### Minor Changes
+
+- Upgrade deps
+
+### Patch Changes
+
+- Updated dependencies
+  - @wizard-ui/core@1.3.0
+
+## 2.2.2
+
+### Patch Changes
+
+- Update peer dependencies
+- Updated dependencies
+  - @wizard-ui/core@1.2.1
+
 ## 2.2.1
 
 ### Patch Changes

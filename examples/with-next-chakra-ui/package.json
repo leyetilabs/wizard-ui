@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@chakra-ui/react": "^2.2.6",
-    "@cosmjs/cosmwasm-stargate": "^0.28.11",
+    "@cosmjs/cosmwasm-stargate": "^0.29.2",
     "@cosmostation/cosmos-client": "^0.0.1",
     "@tanstack/react-query": "^4.1.0",
     "@wizard-ui/core": "^1.2.0",
