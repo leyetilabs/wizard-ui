@@ -1,5 +1,16 @@
 # @arthuryeti/terra
 
+## 2.4.0
+
+### Minor Changes
+
+- Add client and signingClient to avoid client being null when not connected
+
+### Patch Changes
+
+- Updated dependencies
+  - @wizard-ui/core@1.4.0
+
 ## 2.3.0
 
 ### Minor Changes

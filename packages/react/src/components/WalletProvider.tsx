@@ -14,6 +14,7 @@ import {
   WalletReadyState,
 } from "@wizard-ui/core";
 import { EncodeObject } from "@cosmjs/proto-signing";
+import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { StdFee } from "@cosmjs/stargate";
 
 import { WalletNotSelectedError } from "../errors";
@@ -24,6 +25,7 @@ export interface WalletProviderProps {
   children: ReactNode;
   wallets: any[];
   chainId?: string;
+  endpoint: string;
   autoConnect?: boolean;
   onError?: (error: WalletError) => void;
   localStorageKey?: string;
@@ -45,6 +47,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({
   children,
   wallets: adapters,
   autoConnect = true,
+  endpoint,
   onError,
   localStorageKey = "walletName",
 }) => {
@@ -57,11 +60,21 @@ export const WalletProvider: FC<WalletProviderProps> = ({
   const [{ wallet, adapter, address, connected }, setState] =
     useState(initialState);
   const readyState = adapter?.readyState || WalletReadyState.Unsupported;
+  const [client, setClient] = useState<CosmWasmClient | null>(null);
   const [connecting, setConnecting] = useState(false);
   const [disconnecting, setDisconnecting] = useState(false);
   const isConnecting = useRef(false);
   const isDisconnecting = useRef(false);
   const isUnloading = useRef(false);
+
+  useEffect(() => {
+    async function getClient() {
+      const client = await CosmWasmClient.connect(endpoint);
+      setClient(client);
+    }
+
+    getClient();
+  }, [endpoint]);
 
   // Wrap adapters to conform to the `Wallet` interface
   const [wallets, setWallets] = useState(() =>
@@ -321,7 +334,8 @@ export const WalletProvider: FC<WalletProviderProps> = ({
         autoConnect,
         wallets,
         wallet,
-        client: adapter?._wallet,
+        client,
+        signingClient: adapter?._wallet,
         address,
         connected,
         connecting,

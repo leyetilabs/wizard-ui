@@ -93,6 +93,7 @@ export function SliderInput({ value, onChange, ...props }: SliderInputProps) {
         </Slider>
         {[0, 0.25, 0.5, 0.75, 1].map((v) => (
           <SliderInputStepButton
+            key="v"
             sliderValue={value}
             value={v}
             onClick={onChange}

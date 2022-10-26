@@ -1,5 +1,11 @@
 # @arthuryeti/terra
 
+## 1.4.0
+
+### Minor Changes
+
+- Add client and signingClient to avoid client being null when not connected
+
 ## 1.3.0
 
 ### Minor Changes

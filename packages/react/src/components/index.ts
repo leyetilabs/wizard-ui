@@ -1,4 +1,3 @@
-export * from "./CWClientProvider";
 export * from "./WalletIcon";
 export * from "./WalletModal";
 export * from "./WalletModalProvider";

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { useCWClient } from "./useCWClient";
+import { useWallet } from "./useWallet";
 
 interface UseQueryContract {
   address: string;
@@ -8,9 +8,9 @@ interface UseQueryContract {
 }
 
 export const useQueryContract = ({ address, msg }: UseQueryContract) => {
-  const client = useCWClient();
+  const { client } = useWallet();
 
-  return useQuery(["contract", address, msg], () => {
+  return useQuery(["contract", address, client, msg], () => {
     if (address == null || client == null || msg == null) {
       throw new Error("Error in querying contract");
     }

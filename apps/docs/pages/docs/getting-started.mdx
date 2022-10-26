@@ -71,16 +71,11 @@ import { useBalance, useAddress } from "@wizard-ui/react";
 
 function Profile() {
   const { address, connected } = useWallet();
-  const { data: balance } = useBalance({ address, token: "uosmo" });
 
   if (!connected) {
     return <div>Not connected</div>;
   }
 
-  return (
-    <div>
-      Connected to {address} with {balance} LUNA
-    </div>
-  );
+  return <div>Connected to {address}</div>;
 }
 ```

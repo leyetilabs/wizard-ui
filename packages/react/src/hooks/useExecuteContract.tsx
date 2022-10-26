@@ -8,7 +8,7 @@ interface UseExecuteContract {
 }
 
 export const useExecuteContract = ({ address }: UseExecuteContract) => {
-  const { address: senderAddress, client } = useWallet();
+  const { address: senderAddress, signingClient } = useWallet();
 
   return useMutation(
     ({
@@ -22,14 +22,21 @@ export const useExecuteContract = ({ address }: UseExecuteContract) => {
     }) => {
       if (
         senderAddress == null ||
-        client == null ||
+        signingClient == null ||
         address == null ||
         msg == null
       ) {
         throw new Error("Error in executing contract");
       }
 
-      return client.execute(senderAddress, address, msg, "auto", memo, funds);
+      return signingClient.execute(
+        senderAddress,
+        address,
+        msg,
+        "auto",
+        memo,
+        funds
+      );
     }
   );
 };

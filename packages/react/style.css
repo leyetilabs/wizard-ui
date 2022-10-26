@@ -142,6 +142,7 @@
   height: 2.5rem;
   min-width: 2.5rem;
   padding: 0 1rem;
+  z-index: 100;
 }
 
 .wz-connect-button:hover {
@@ -216,6 +217,7 @@
 
 .wz-menu {
   position: relative;
+  z-index: 100;
   display: inline-block;
   text-align: left;
 }

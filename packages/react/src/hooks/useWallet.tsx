@@ -6,7 +6,10 @@ import type {
 } from "@wizard-ui/core";
 import { EncodeObject } from "@cosmjs/proto-signing";
 import { StdFee } from "@cosmjs/stargate";
-import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
+import {
+  CosmWasmClient,
+  SigningCosmWasmClient,
+} from "@cosmjs/cosmwasm-stargate";
 
 export interface Wallet {
   adapter: any;
@@ -17,7 +20,8 @@ export interface WalletContextState {
   autoConnect: boolean;
   wallets: Wallet[];
   wallet: Wallet | null;
-  client: SigningCosmWasmClient | null;
+  client: CosmWasmClient | null;
+  signingClient: SigningCosmWasmClient | null;
   address: any | null;
   connecting: boolean;
   connected: boolean;
