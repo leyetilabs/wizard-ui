@@ -136,7 +136,9 @@ export class KeplrWalletAdapter extends BaseSignerWalletAdapter {
       try {
         await window.keplr!.enable(this._chainId);
 
-        const offlineSigner = window.keplr!.getOfflineSigner(this._chainId);
+        const offlineSigner = await window.keplr!.getOfflineSignerAuto(
+          this._chainId
+        );
 
         accounts = await offlineSigner.getAccounts();
 

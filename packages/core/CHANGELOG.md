@@ -1,5 +1,11 @@
 # @arthuryeti/terra
 
+## 1.5.0
+
+### Minor Changes
+
+- Support ledger account on keplr
+
 ## 1.4.0
 
 ### Minor Changes
