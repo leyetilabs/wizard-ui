@@ -1,11 +1,5 @@
-import React, { createContext, useContext } from "react";
-import type {
-  BaseSignerWalletAdapter,
-  WalletName,
-  WalletReadyState,
-} from "@wizard-ui/core";
-import { EncodeObject } from "@cosmjs/proto-signing";
-import { StdFee } from "@cosmjs/stargate";
+import { createContext, useContext } from "react";
+import type { WalletName, WalletReadyState } from "@wizard-ui/core";
 import {
   CosmWasmClient,
   SigningCosmWasmClient,
@@ -30,8 +24,6 @@ export interface WalletContextState {
   select(walletName: WalletName): void;
   connect(): Promise<void>;
   disconnect(): Promise<void>;
-  sendTransaction: BaseSignerWalletAdapter["sendTransaction"];
-  signTransaction: BaseSignerWalletAdapter["signTransaction"];
 }
 
 const EMPTY_ARRAY: ReadonlyArray<never> = [];
@@ -52,40 +44,6 @@ const DEFAULT_CONTEXT = {
   disconnect() {
     return Promise.reject(
       console.error(constructMissingProviderErrorMessage("get", "disconnect"))
-    );
-  },
-  sendTransaction({
-    signerAddress,
-    messages,
-    fee,
-    memo,
-  }: {
-    signerAddress: string;
-    messages: EncodeObject[];
-    fee: number | StdFee | "auto";
-    memo?: string;
-  }) {
-    return Promise.reject(
-      console.error(
-        constructMissingProviderErrorMessage("get", "sendTransaction")
-      )
-    );
-  },
-  signTransaction({
-    signerAddress,
-    messages,
-    fee,
-    memo,
-  }: {
-    signerAddress: string;
-    messages: EncodeObject[];
-    fee: StdFee;
-    memo: string;
-  }) {
-    return Promise.reject(
-      console.error(
-        constructMissingProviderErrorMessage("get", "signTransaction")
-      )
     );
   },
 } as WalletContextState;

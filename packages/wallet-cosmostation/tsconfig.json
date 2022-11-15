@@ -1,0 +1,8 @@
+{
+  "extends": "@wizard-ui/tsconfig/react-library.json",
+  "include": ["."],
+  "compilerOptions": {
+    "lib": ["es2020", "dom"]
+  },
+  "exclude": ["dist", "build", "node_modules"]
+}

@@ -1,3 +1,4 @@
+import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import EventEmitter from "eventemitter3";
 
 import type { WalletError } from "./errors";
@@ -9,10 +10,6 @@ export interface WalletAdapterEvents {
   disconnect(): void;
   error(error: WalletError): void;
   readyStateChange(readyState: WalletReadyState): void;
-}
-
-export interface SendTransactionOptions {
-  signers?: any[];
 }
 
 // WalletName is a nominal type that wallet adapters should use, e.g. `'MyCryptoWallet' as WalletName<'MyCryptoWallet'>`
@@ -29,6 +26,7 @@ export interface WalletAdapterProps<Name extends string = string> {
   address: any | null;
   connecting: boolean;
   connected: boolean;
+  signingClient: SigningCosmWasmClient | null;
 
   connect(): Promise<void>;
   disconnect(): Promise<void>;
@@ -76,6 +74,7 @@ export abstract class BaseWalletAdapter
   abstract readyState: WalletReadyState;
   abstract address: any | null;
   abstract connecting: boolean;
+  abstract signingClient: SigningCosmWasmClient | null;
 
   get connected(): boolean {
     return !!this.address;

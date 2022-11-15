@@ -1,10 +1,12 @@
 # @arthuryeti/terra
 
-## 1.5.1
+## 1.0.1
 
 ### Patch Changes
 
 - Support the 'keplr_keystorechange' event
+- Updated dependencies
+  - @wizard-ui/core@1.5.1
 
 ## 1.5.0
 

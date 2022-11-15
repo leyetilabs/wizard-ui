@@ -85,6 +85,13 @@ export const WalletModal: FC<WalletModalProps> = ({ className = "" }) => {
                       wallet={wallet}
                     />
                   ))}
+                  {otherWallets.map((wallet) => (
+                    <WalletListItem
+                      key={wallet.adapter.name}
+                      handleClick={() => handleWalletClick(wallet.adapter.name)}
+                      wallet={wallet}
+                    />
+                  ))}
                 </div>
               </Dialog.Panel>
             </Transition.Child>

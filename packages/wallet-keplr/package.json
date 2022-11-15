@@ -1,6 +1,6 @@
 {
-  "name": "@wizard-ui/core",
-  "version": "1.5.1",
+  "name": "@wizard-ui/wallet-keplr",
+  "version": "1.0.1",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -16,6 +16,7 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "devDependencies": {
+    "@keplr-wallet/types": "^0.11.13",
     "@types/lodash": "^4.14.186",
     "@typescript-eslint/parser": "^5.41.0",
     "eslint-import-resolver-typescript": "^3.5.2",
@@ -25,15 +26,15 @@
   },
   "peerDependencies": {
     "@cosmjs/cosmwasm-stargate": "^0.29.3",
+    "@cosmostation/cosmos-client": "^0.0.1",
     "@cosmjs/stargate": "^0.29.3"
   },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
-    "bignumber.js": "^9.1.0",
-    "d3-format": "^3.1.0",
     "eventemitter3": "^4.0.7",
+    "@wizard-ui/core": "*",
     "lodash": "^4.17.21"
   }
 }

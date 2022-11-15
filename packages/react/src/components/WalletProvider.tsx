@@ -8,14 +8,8 @@ import React, {
 import type { FC, ReactNode } from "react";
 import { useLocalStorageState } from "ahooks";
 import type { WalletError, WalletName } from "@wizard-ui/core";
-import {
-  WalletNotConnectedError,
-  WalletNotReadyError,
-  WalletReadyState,
-} from "@wizard-ui/core";
-import { EncodeObject } from "@cosmjs/proto-signing";
+import { WalletNotReadyError, WalletReadyState } from "@wizard-ui/core";
 import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
-import { StdFee } from "@cosmjs/stargate";
 
 import { WalletNotSelectedError } from "../errors";
 import type { Wallet } from "../hooks";
@@ -35,11 +29,13 @@ const initialState: {
   wallet: Wallet | null;
   adapter: any | null;
   address: any | null;
+  signingClient: any | null;
   connected: boolean;
 } = {
   wallet: null,
   adapter: null,
   address: null,
+  signingClient: null,
   connected: false,
 };
 
@@ -57,7 +53,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({
       defaultValue: null,
     }
   );
-  const [{ wallet, adapter, address, connected }, setState] =
+  const [{ wallet, adapter, address, connected, signingClient }, setState] =
     useState(initialState);
   const readyState = adapter?.readyState || WalletReadyState.Unsupported;
   const [client, setClient] = useState<CosmWasmClient | null>(null);
@@ -119,6 +115,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({
         adapter: wallet.adapter,
         connected: wallet.adapter.connected,
         address: wallet.adapter.address,
+        signingClient: wallet.adapter.signingClient,
       });
     } else {
       setState(initialState);
@@ -173,6 +170,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({
       ...state,
       connected: adapter.connected,
       address: adapter.address,
+      signingClient: adapter.signingClient,
     }));
   }, [adapter]);
 
@@ -278,56 +276,6 @@ export const WalletProvider: FC<WalletProviderProps> = ({
     }
   }, [isDisconnecting, disconnecting, adapter]);
 
-  // Send a transaction using the provided connection
-  const sendTransaction = useCallback(
-    async ({
-      signerAddress,
-      messages,
-      fee,
-      memo,
-    }: {
-      signerAddress: string;
-      messages: EncodeObject[];
-      fee: number | StdFee | "auto";
-      memo?: string;
-    }) => {
-      if (!adapter) throw handleError(new WalletNotSelectedError());
-      if (!connected) throw handleError(new WalletNotConnectedError());
-      return await adapter.sendTransaction({
-        signerAddress,
-        messages,
-        fee,
-        memo,
-      });
-    },
-    [adapter, handleError, connected]
-  );
-
-  // Sign a transaction if the wallet supports it
-  const signTransaction = useCallback(
-    async ({
-      signerAddress,
-      messages,
-      fee,
-      memo,
-    }: {
-      signerAddress: string;
-      messages: EncodeObject[];
-      fee: StdFee;
-      memo: string;
-    }): Promise<any> => {
-      if (!adapter) throw handleError(new WalletNotSelectedError());
-      if (!connected) throw handleError(new WalletNotConnectedError());
-      return await adapter.signTransaction({
-        signerAddress,
-        messages,
-        fee,
-        memo,
-      });
-    },
-    [adapter, handleError, connected]
-  );
-
   return (
     <WalletContext.Provider
       value={{
@@ -335,7 +283,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({
         wallets,
         wallet,
         client,
-        signingClient: adapter?._wallet,
+        signingClient,
         address,
         connected,
         connecting,
@@ -343,8 +291,6 @@ export const WalletProvider: FC<WalletProviderProps> = ({
         select: setName,
         connect,
         disconnect,
-        sendTransaction,
-        signTransaction,
       }}
     >
       {children}

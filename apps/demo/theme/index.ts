@@ -11,6 +11,7 @@ import Spinner from "./spinner";
 import Slider from "./slider";
 import Tabs from "./tabs";
 import Tooltip from "./tooltip";
+import ProvideLiquidity from "./provide-liquidity";
 
 import shadows from "./shadows";
 
@@ -43,8 +44,8 @@ export default extendTheme({
   shadows,
   fonts: {
     heading:
-      "'Roboto Mono',-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji",
-    body: "'Roboto Mono',-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji",
+      "'Protipo',-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji",
+    body: "'Protipo',-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji",
     mono: "Menlo, monospace",
   },
   components: {
@@ -59,6 +60,7 @@ export default extendTheme({
     Slider,
     Tabs,
     Tooltip,
+    ProvideLiquidity,
   },
   textStyles: {
     h1: {

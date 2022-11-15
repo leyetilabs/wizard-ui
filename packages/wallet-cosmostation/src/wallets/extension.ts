@@ -3,15 +3,12 @@ import {
   SigningCosmWasmClientOptions,
 } from "@cosmjs/cosmwasm-stargate";
 import { EncodeObject } from "@cosmjs/proto-signing";
-import { StdFee, GasPrice } from "@cosmjs/stargate";
-
+import { StdFee } from "@cosmjs/stargate";
 import {
   WalletName,
   scopePollingDetectionStrategy,
   WalletReadyState,
-} from "../base";
-import { BaseSignerWalletAdapter } from "../signer";
-import {
+  BaseWalletAdapter,
   WalletAccountError,
   WalletConnectionError,
   WalletDisconnectedError,
@@ -22,32 +19,10 @@ import {
   WalletPublicKeyError,
   WalletSendTransactionError,
   WalletSignTransactionError,
-} from "../errors";
+} from "@wizard-ui/core";
 
 interface CosmostationWallet extends SigningCosmWasmClient {
   address?: any;
-  signTransaction({
-    signerAddress,
-    messages,
-    fee,
-    memo,
-  }: {
-    signerAddress: string;
-    messages: EncodeObject[];
-    fee: StdFee;
-    memo: string;
-  }): Promise<any>;
-  signAndSendTransaction({
-    signerAddress,
-    messages,
-    fee,
-    memo,
-  }: {
-    signerAddress: string;
-    messages: EncodeObject[];
-    fee: number | StdFee | "auto";
-    memo?: string;
-  }): Promise<{ signature: any }>;
   connect(): Promise<void>;
   disconnect(): Promise<void>;
 }
@@ -67,7 +42,7 @@ export interface CosmostationWalletAdapterConfig {
 
 export const CosmostationWalletName = "Cosmostation Wallet" as WalletName;
 
-export class CosmostationWalletAdapter extends BaseSignerWalletAdapter {
+export class CosmostationWalletAdapter extends BaseWalletAdapter {
   name = CosmostationWalletName;
   url =
     "https://chrome.google.com/webstore/detail/cosmostation/fpkhgmpbidmiogeglndfbkegfdlnajnf?utm_source=chrome-ntp-icon";
@@ -122,6 +97,10 @@ export class CosmostationWalletAdapter extends BaseSignerWalletAdapter {
 
   get readyState(): WalletReadyState {
     return this._readyState;
+  }
+
+  get signingClient(): SigningCosmWasmClient | null {
+    return this._wallet;
   }
 
   async connect(): Promise<void> {

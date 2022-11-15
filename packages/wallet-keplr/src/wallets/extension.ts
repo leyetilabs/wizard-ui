@@ -3,52 +3,21 @@ import {
   SigningCosmWasmClient,
   SigningCosmWasmClientOptions,
 } from "@cosmjs/cosmwasm-stargate";
-import { EncodeObject } from "@cosmjs/proto-signing";
-import { StdFee } from "@cosmjs/stargate";
-
 import {
   WalletName,
   scopePollingDetectionStrategy,
   WalletReadyState,
-} from "../base";
-import { BaseSignerWalletAdapter } from "../signer";
-import {
+  BaseWalletAdapter,
   WalletAccountError,
   WalletConnectionError,
   WalletDisconnectedError,
   WalletDisconnectionError,
-  WalletError,
-  WalletNotConnectedError,
   WalletNotReadyError,
   WalletPublicKeyError,
-  WalletSendTransactionError,
-  WalletSignTransactionError,
-} from "../errors";
+} from "@wizard-ui/core";
 
 interface KeplrWallet extends SigningCosmWasmClient {
   address?: any;
-  signTransaction({
-    signerAddress,
-    messages,
-    fee,
-    memo,
-  }: {
-    signerAddress: string;
-    messages: EncodeObject[];
-    fee: StdFee;
-    memo: string;
-  }): Promise<any>;
-  signAndSendTransaction({
-    signerAddress,
-    messages,
-    fee,
-    memo,
-  }: {
-    signerAddress: string;
-    messages: EncodeObject[];
-    fee: number | StdFee | "auto";
-    memo?: string;
-  }): Promise<{ signature: any }>;
   connect(): Promise<void>;
   disconnect(): Promise<void>;
 }
@@ -67,7 +36,7 @@ export interface KeplrWalletAdapterConfig {
 
 export const KeplrWalletName = "Keplr Wallet" as WalletName;
 
-export class KeplrWalletAdapter extends BaseSignerWalletAdapter {
+export class KeplrWalletAdapter extends BaseWalletAdapter {
   name = KeplrWalletName;
   url =
     "https://chrome.google.com/webstore/detail/keplr/dmkamcknogkgcdfhhbddcghachkejeap";
@@ -103,6 +72,8 @@ export class KeplrWalletAdapter extends BaseSignerWalletAdapter {
         }
         return false;
       });
+
+      window?.addEventListener("keplr_keystorechange", this._updateWallet);
     }
   }
 
@@ -121,6 +92,52 @@ export class KeplrWalletAdapter extends BaseSignerWalletAdapter {
   get readyState(): WalletReadyState {
     return this._readyState;
   }
+
+  get signingClient(): SigningCosmWasmClient | null {
+    return this._wallet;
+  }
+
+  private _updateWallet = async (event: Event) => {
+    event.preventDefault();
+
+    this._connecting = true;
+
+    let wallet = null;
+    let accounts = null;
+
+    try {
+      // await window.keplr!.enable(this._chainId);
+
+      const offlineSigner = await window.keplr!.getOfflineSignerAuto(
+        this._chainId
+      );
+
+      accounts = await offlineSigner.getAccounts();
+
+      // Initialize the gaia api with the offline signer that is injected by Keplr extension.
+      wallet = await SigningCosmWasmClient.connectWithSigner(
+        this._endpoint,
+        offlineSigner,
+        this._options
+      );
+    } catch (error: any) {
+      throw new WalletConnectionError(error?.message, error);
+    }
+    if (accounts.length == 0) throw new WalletAccountError();
+
+    let address: any;
+    try {
+      address = accounts[0].address;
+    } catch (error: any) {
+      throw new WalletPublicKeyError(error?.message, error);
+    }
+
+    this._wallet = wallet as KeplrWallet;
+    this._address = address;
+
+    this.emit("connect", address);
+    this._connecting = false;
+  };
 
   async connect(): Promise<void> {
     try {
@@ -188,64 +205,6 @@ export class KeplrWalletAdapter extends BaseSignerWalletAdapter {
     }
 
     this.emit("disconnect");
-  }
-
-  async sendTransaction({
-    signerAddress,
-    messages,
-    fee,
-    memo,
-  }: {
-    signerAddress: string;
-    messages: EncodeObject[];
-    fee: number | StdFee | "auto";
-    memo?: string;
-  }): Promise<any> {
-    try {
-      const wallet = this._wallet;
-      if (!wallet) throw new WalletNotConnectedError();
-
-      try {
-        return await wallet.signAndBroadcast(
-          signerAddress,
-          messages,
-          fee,
-          memo
-        );
-      } catch (error: any) {
-        if (error instanceof WalletError) throw error;
-        throw new WalletSendTransactionError(error?.message, error);
-      }
-    } catch (error: any) {
-      this.emit("error", error);
-      throw error;
-    }
-  }
-
-  async signTransaction({
-    signerAddress,
-    messages,
-    fee,
-    memo,
-  }: {
-    signerAddress: string;
-    messages: EncodeObject[];
-    fee: StdFee;
-    memo: string;
-  }): Promise<any> {
-    try {
-      const wallet = this._wallet;
-      if (!wallet) throw new WalletNotConnectedError();
-
-      try {
-        return await wallet.sign(signerAddress, messages, fee, memo);
-      } catch (error: any) {
-        throw new WalletSignTransactionError(error?.message, error);
-      }
-    } catch (error: any) {
-      this.emit("error", error);
-      throw error;
-    }
   }
 
   private _disconnected = () => {

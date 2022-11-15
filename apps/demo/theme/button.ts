@@ -7,6 +7,7 @@ import { getColor } from "@chakra-ui/theme-tools";
 const baseStyle: SystemStyleObject = {
   fontWeight: 500,
   borderRadius: "lg",
+  textTransform: "uppercase",
   _disabled: {
     cursor: "not-allowed",
     boxShadow: "none",
@@ -83,7 +84,7 @@ const variants = {
 
 const sizes: Record<string, SystemStyleObject> = {
   sm: {
-    fontSize: "sm",
+    fontSize: "xs",
   },
   md: {
     fontSize: "sm",
@@ -95,11 +96,13 @@ const sizes: Record<string, SystemStyleObject> = {
   },
   xl: {
     h: "48px",
-    fontSize: "md",
+    fontSize: "sm",
+    letterSpacing: "0.5px",
     px: 3,
   },
   "2xl": {
-    fontSize: "lg",
+    fontSize: "md",
+    letterSpacing: "1px",
   },
 };
 
