@@ -10,7 +10,7 @@
   "dependencies": {
     "@babel/core": "^7.16.0",
     "@chakra-ui/react": "^2.3.1",
-    "@cosmjs/cosmwasm-stargate": "^0.29.3",
+    "@cosmjs/cosmwasm-stargate": "^0.29.4",
     "@cosmostation/cosmos-client": "^0.0.1",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
     "@svgr/webpack": "^5.5.0",
@@ -28,7 +28,6 @@
     "case-sensitive-paths-webpack-plugin": "^2.4.0",
     "css-loader": "^6.5.1",
     "css-minimizer-webpack-plugin": "^3.2.0",
-    "d3-format": "^3.1.0",
     "dotenv": "^10.0.0",
     "dotenv-expand": "^5.1.0",
     "eslint": "^8.3.0",

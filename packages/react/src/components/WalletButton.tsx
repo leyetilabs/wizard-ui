@@ -1,13 +1,75 @@
-import React, { FC } from "react";
+import { ComponentType, ReactNode, ReactElement } from "react";
 import { truncate } from "@wizard-ui/core";
 import { Menu, Transition } from "@headlessui/react";
 import { ChevronDown as ChevronDownIcon } from "lucide-react";
 
-import { useWallet, useWalletModal } from "../hooks";
+import { useWalletModal } from "../hooks";
+import { render } from "../utils";
+import { useWallet } from "../contexts";
 
-export function WalletButton() {
+interface Props {
+  renderBtn?: () => ReactNode;
+  children?: ReactNode | ((bag: any) => ReactElement);
+}
+
+export function WalletButton({ renderBtn, children }: Props) {
   const { visible, setVisible } = useWalletModal();
   const { address, connected, disconnect, connecting } = useWallet();
+
+  function renderButton() {
+    if (renderBtn != null) {
+      return renderBtn();
+    }
+
+    return (
+      <>
+        <span>{truncate(address)}</span>
+        <span className="wz-icon">
+          <ChevronDownIcon size="1rem" />
+        </span>
+      </>
+    );
+  }
+
+  function renderItems(close: () => void) {
+    if (children != null) {
+      return render({
+        ourProps: {},
+        theirProps: { children },
+        slot: {
+          disconnect: () => {
+            close();
+            disconnect();
+          },
+          showModal: () => {
+            close();
+            setVisible(true);
+          },
+        },
+        defaultTag: "div",
+        name: "Items",
+      });
+    }
+
+    return (
+      <>
+        <Menu.Item>
+          <button
+            type="button"
+            className="wz-menu-item"
+            onClick={() => setVisible(true)}
+          >
+            Change wallet
+          </button>
+        </Menu.Item>
+        <Menu.Item>
+          <button type="button" className="wz-menu-item" onClick={disconnect}>
+            Disconnect
+          </button>
+        </Menu.Item>
+      </>
+    );
+  }
 
   function handleClick() {
     setVisible(!visible);
@@ -16,45 +78,27 @@ export function WalletButton() {
   if (connected) {
     return (
       <Menu as="div" className="wz-menu">
-        <div>
-          <Menu.Button className="wz-connect-button">
-            <span>{truncate(address)}</span>
-            <span className="wz-icon">
-              <ChevronDownIcon size="1rem" />
-            </span>
-          </Menu.Button>
-        </div>
+        {({ close }) => (
+          <>
+            <Menu.Button className="wz-connect-button">
+              {renderButton()}
+            </Menu.Button>
 
-        <Transition
-          as="div"
-          enter="transition ease-out duration-100"
-          enterFrom="transform opacity-0 scale-95"
-          enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-75"
-          leaveFrom="transform opacity-100 scale-100"
-          leaveTo="transform opacity-0 scale-95"
-        >
-          <Menu.Items className="wz-menu-items">
-            <Menu.Item>
-              <button
-                type="button"
-                className="wz-menu-item"
-                onClick={() => setVisible(true)}
-              >
-                Change wallet
-              </button>
-            </Menu.Item>
-            <Menu.Item>
-              <button
-                type="button"
-                className="wz-menu-item"
-                onClick={disconnect}
-              >
-                Disconnect
-              </button>
-            </Menu.Item>
-          </Menu.Items>
-        </Transition>
+            <Transition
+              as="div"
+              enter="transition ease-out duration-100"
+              enterFrom="transform opacity-0 scale-95"
+              enterTo="transform opacity-100 scale-100"
+              leave="transition ease-in duration-75"
+              leaveFrom="transform opacity-100 scale-100"
+              leaveTo="transform opacity-0 scale-95"
+            >
+              <Menu.Items className="wz-menu-items">
+                {renderItems(close)}
+              </Menu.Items>
+            </Transition>
+          </>
+        )}
       </Menu>
     );
   }

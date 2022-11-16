@@ -1,19 +1,68 @@
-import React, {
-  useCallback,
+import {
   useEffect,
   useMemo,
   useRef,
   useState,
+  createContext,
+  useContext,
+  useCallback,
+  ReactNode,
 } from "react";
-import type { FC, ReactNode } from "react";
-import { useLocalStorageState } from "ahooks";
 import type { WalletError, WalletName } from "@wizard-ui/core";
-import { WalletNotReadyError, WalletReadyState } from "@wizard-ui/core";
-import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
+import {
+  WalletReadyState,
+  WalletNotReadyError,
+  WalletNotSelectedError,
+} from "@wizard-ui/core";
+import {
+  CosmWasmClient,
+  SigningCosmWasmClient,
+} from "@cosmjs/cosmwasm-stargate";
+import { useLocalStorageState } from "ahooks";
 
-import { WalletNotSelectedError } from "../errors";
-import type { Wallet } from "../hooks";
-import { WalletContext } from "../hooks";
+export interface Wallet {
+  adapter: any;
+  readyState: WalletReadyState;
+}
+
+export interface WalletContextType {
+  autoConnect: boolean;
+  wallets: Wallet[];
+  wallet: Wallet | null;
+  client: CosmWasmClient | null;
+  signingClient: SigningCosmWasmClient | null;
+  address: string | null;
+  connecting: boolean;
+  connected: boolean;
+  disconnecting: boolean;
+
+  select(walletName: WalletName): void;
+  connect(): Promise<void>;
+  disconnect(): Promise<void>;
+}
+
+const WalletContext = createContext<WalletContextType>({
+  autoConnect: false,
+  wallets: [],
+  wallet: null,
+  client: null,
+  signingClient: null,
+  address: null,
+  connecting: false,
+  connected: false,
+  disconnecting: false,
+  select(_name: WalletName) {},
+  async connect() {},
+  async disconnect() {},
+});
+
+export function useWallet() {
+  const context = useContext(WalletContext);
+  if (!context) {
+    throw new Error("useWallet must be used within a WalletProvider");
+  }
+  return context;
+}
 
 export interface WalletProviderProps {
   children: ReactNode;
@@ -39,14 +88,14 @@ const initialState: {
   connected: false,
 };
 
-export const WalletProvider: FC<WalletProviderProps> = ({
+export function WalletProvider({
   children,
   wallets: adapters,
   autoConnect = true,
   endpoint,
   onError,
   localStorageKey = "walletName",
-}) => {
+}: WalletProviderProps) {
   const [name, setName] = useLocalStorageState<WalletName | null>(
     localStorageKey,
     {
@@ -296,4 +345,4 @@ export const WalletProvider: FC<WalletProviderProps> = ({
       {children}
     </WalletContext.Provider>
   );
-};
+}

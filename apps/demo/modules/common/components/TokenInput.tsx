@@ -73,12 +73,12 @@ function SelectTokenItem({ token, isActive, onClick }: SelectTokenItemProps) {
       <Box textAlign="right">
         <Text>
           {formatAmount(token.amount, {
-            formatSpecifier: NumberFormatSpecifier.APPROX_FLOAT,
+            formatSpecifier: NumberFormatSpecifier.FLOAT,
           })}
         </Text>
         <Text color="whiteAlpha.500" fontSize="sm">
           {formatAmount(token.price, {
-            formatSpecifier: NumberFormatSpecifier.FULL_CURRENCY,
+            formatSpecifier: NumberFormatSpecifier.CURRENCY,
           })}
         </Text>
       </Box>
@@ -108,8 +108,6 @@ function SelectTokenModal({
       keys: ["name"],
     });
   }, [tokens]);
-
-  console.log(searchedTokens);
 
   const handleSearchChange = (e: any) => {
     const newTokens = fuse.search(e.target.value).map((v) => v.item);
@@ -262,7 +260,7 @@ export function TokenInput({
           <Text color="whiteAlpha.500">{maxLabel}</Text>
           <Box color="gray.100" cursor="pointer" onClick={handleMaxButton}>
             {formatAmount(max, {
-              formatSpecifier: NumberFormatSpecifier.APPROX_FLOAT,
+              formatSpecifier: NumberFormatSpecifier.FLOAT,
             })}
           </Box>
         </HStack>

@@ -57,7 +57,7 @@ export function SliderInput({ value, onChange, ...props }: SliderInputProps) {
   const [showTooltip, setShowTooltip] = useState(false);
 
   const tooltipValue = formatAmount(value, {
-    formatSpecifier: NumberFormatSpecifier.INTEGER_PERCENTAGE,
+    formatSpecifier: NumberFormatSpecifier.PERCENTAGE,
   });
 
   return (

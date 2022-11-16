@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { Coin } from "@cosmjs/stargate";
 
-import { useWallet } from "./useWallet";
+import { useWallet } from "../contexts";
 
 interface UseExecuteContract {
   address: string;

@@ -39,7 +39,7 @@ export function AmountInput({
         {max != null && (
           <Box cursor="pointer" onClick={() => onChange(max)}>
             {formatAmount(max, {
-              formatSpecifier: NumberFormatSpecifier.LARGE_NUMBER,
+              formatSpecifier: NumberFormatSpecifier.FLOAT,
             })}
           </Box>
         )}

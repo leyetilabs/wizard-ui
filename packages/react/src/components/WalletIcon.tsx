@@ -1,7 +1,7 @@
 import React from "react";
 import type { DetailedHTMLProps, FC, ImgHTMLAttributes } from "react";
 
-import type { Wallet } from "../hooks";
+import type { Wallet } from "../contexts";
 
 export interface WalletIconProps
   extends DetailedHTMLProps<

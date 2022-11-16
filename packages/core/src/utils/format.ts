@@ -1,7 +1,7 @@
 import BigNumber from "bignumber.js";
-import { format } from "d3-format";
 
 BigNumber.config({
+  DECIMAL_PLACES: 6,
   ROUNDING_MODE: BigNumber.ROUND_DOWN,
   EXPONENTIAL_AT: [-10, 20],
 });
@@ -11,24 +11,15 @@ export const num = (value: BigNumber.Value = "0"): BigNumber => {
 };
 
 export enum NumberFormatSpecifier {
-  FULL_CURRENCY = "$,.2f",
-  APPROX_CURRENCY = "$~s",
-  LARGE_NUMBER = "~s",
-  DEFAULT_FLOAT = ",.6~f", // Max 6 decimal places
-  INTEGER_PERCENTAGE = ".0%",
-  DEFAULT_PERCENTAGE = ".2%",
-  PRECISE_PERCENTAGE = ".6%",
-  APPROX_FLOAT = ",.2f", // Max 2 decimal places
-  FULL_INT = ".0f",
+  PERCENTAGE = 1,
+  CURRENCY = 2,
+  FLOAT = 3,
 }
 
 export interface NumberFormatOptions {
+  formatSpecifier?: NumberFormatSpecifier;
   // Whether the value is in micro denom, in which case, the formatted number will be converted to base units
   shouldDivide?: boolean;
-  // The format specifier to use, see https://github.com/d3/d3-format
-  formatSpecifier?: NumberFormatSpecifier | string;
-  // What to render if the value given is null
-  defaultFallback?: string;
 }
 
 export function formatAmount(
@@ -43,10 +34,44 @@ export function formatAmount(
   const valToFormat = options?.shouldDivide
     ? valOrZero.div(10 ** 6)
     : valOrZero;
+  const currentDp = valToFormat.dp();
 
-  return format(
-    options?.formatSpecifier ?? NumberFormatSpecifier.DEFAULT_FLOAT
-  )(valToFormat.toNumber());
+  let formatOptions = {
+    prefix: "",
+    decimalSeparator: ".",
+    groupSeparator: ",",
+    groupSize: 3,
+    secondaryGroupSize: 3,
+    fractionGroupSeparator: " ",
+    fractionGroupSize: 0,
+    suffix: "",
+  };
+  let dp = 2;
+  if (currentDp != null) {
+    if (!(currentDp > 2)) {
+      dp = currentDp;
+    }
+  }
+
+  if (options?.formatSpecifier == NumberFormatSpecifier.PERCENTAGE) {
+    formatOptions.suffix = "%";
+  }
+
+  if (options?.formatSpecifier == NumberFormatSpecifier.CURRENCY) {
+    formatOptions.prefix = "$";
+  }
+
+  if (options?.formatSpecifier == NumberFormatSpecifier.FLOAT) {
+    if (currentDp != null) {
+      if (currentDp > 6) {
+        dp = 6;
+      } else {
+        dp = currentDp;
+      }
+    }
+  }
+
+  return valToFormat.toFormat(dp, formatOptions);
 }
 
 export const numberAccept = /[\d.]+/g;

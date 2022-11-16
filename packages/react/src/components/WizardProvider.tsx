@@ -3,7 +3,7 @@ import type { FC, ReactNode } from "react";
 import type { WalletError } from "@wizard-ui/core";
 
 import { WalletModalProvider } from "./WalletModalProvider";
-import { WalletProvider } from "./WalletProvider";
+import { WalletProvider } from "../contexts";
 
 export interface WizardProviderProps {
   children: ReactNode;

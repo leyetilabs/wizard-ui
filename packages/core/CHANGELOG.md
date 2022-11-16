@@ -1,5 +1,17 @@
 # @arthuryeti/terra
 
+## 1.6.0
+
+### Minor Changes
+
+- Add a way to customize the button
+
+## 1.5.2
+
+### Patch Changes
+
+- Change format function
+
 ## 1.5.1
 
 ### Patch Changes

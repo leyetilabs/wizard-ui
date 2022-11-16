@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { useWallet } from "./useWallet";
+import { useWallet } from "../contexts";
 
 interface UseQueryContract {
   address: string;

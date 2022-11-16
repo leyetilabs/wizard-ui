@@ -19,9 +19,12 @@ export default function Web() {
   const [amount2, setAmount2] = useState("");
 
   const handleClick = async () => {
+    if (address == null || signingClient == null) {
+      throw new Error("Problem");
+    }
     setIsLoading(true);
 
-    await signingClient?.execute(
+    await signingClient.execute(
       address,
       "osmo12z0kqd9y28znzjk7pa8e0646nmhrctxnw0nj7265hzgazzml7uuqe88thx",
       {
@@ -126,7 +129,7 @@ export default function Web() {
           <Stat
             label="Yield (cumulative)"
             value={formatAmount(vaultValue, {
-              formatSpecifier: NumberFormatSpecifier.DEFAULT_PERCENTAGE,
+              formatSpecifier: NumberFormatSpecifier.PERCENTAGE,
             })}
           />
         </Box>
@@ -152,6 +155,13 @@ export default function Web() {
           Before you deposit, the vault needs your permission to invest your
           USDC in the vault’s strategy.
         </Text>
+
+        <Box>
+          {formatAmount(123456789, {
+            formatSpecifier: NumberFormatSpecifier.FLOAT,
+            shouldDivide: true,
+          })}
+        </Box>
 
         {/* <ProvideLiquidity /> */}
       </Box>

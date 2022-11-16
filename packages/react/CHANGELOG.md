@@ -1,5 +1,16 @@
 # @arthuryeti/terra
 
+## 2.5.0
+
+### Minor Changes
+
+- Add a way to customize the button
+
+### Patch Changes
+
+- Updated dependencies
+  - @wizard-ui/core@1.6.0
+
 ## 2.4.1
 
 ### Patch Changes

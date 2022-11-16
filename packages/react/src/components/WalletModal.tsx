@@ -5,7 +5,8 @@ import type { WalletName } from "@wizard-ui/core";
 import { WalletReadyState } from "@wizard-ui/core";
 
 // import { Collapse } from "./Collapse";
-import { useWalletModal, useWallet, Wallet } from "../hooks";
+import { useWalletModal } from "../hooks";
+import { useWallet, Wallet } from "../contexts";
 import { WalletListItem } from "./WalletListItem";
 
 export interface WalletModalProps {
